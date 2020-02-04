@@ -1,6 +1,5 @@
 package vc.rux.todoclient.todoclient
 
-
 interface ITodoClient {
     suspend fun all(): List<Todo>
     suspend fun byId(id: String): Todo?

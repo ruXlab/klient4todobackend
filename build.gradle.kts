@@ -17,6 +17,9 @@ buildscript {
         // in the individual module build.gradle files
     }
 }
+plugins {
+    id("org.jmailen.kotlinter") version "2.3.0"
+}
 
 allprojects {
     repositories {

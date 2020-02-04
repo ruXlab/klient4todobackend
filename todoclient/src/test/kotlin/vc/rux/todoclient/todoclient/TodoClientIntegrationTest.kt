@@ -2,16 +2,14 @@ package vc.rux.todoclient.todoclient
 
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
-import com.fasterxml.jackson.module.kotlin.readValues
+import java.util.concurrent.TimeUnit
 import kotlinx.coroutines.*
 import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.MockWebServer
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
-
 import org.junit.jupiter.api.Test
-import java.util.concurrent.TimeUnit
 
 class TodoClientIntegrationTest {
 
@@ -149,7 +147,6 @@ class TodoClientIntegrationTest {
         Unit
     }
 
-
     @AfterEach
     fun shutDown() {
         mockServer.shutdown()
@@ -159,5 +156,4 @@ class TodoClientIntegrationTest {
         withContext(Dispatchers.IO) {
             takeRequest(waitTimeSeconds, TimeUnit.SECONDS)
         }
-
 }

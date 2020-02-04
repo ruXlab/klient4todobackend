@@ -2,7 +2,6 @@ package vc.rux.todoclient.servers
 
 import com.fasterxml.jackson.annotation.JsonProperty
 
-
 internal data class TodoServerResponse(
     @JsonProperty("description")
     val description: String,

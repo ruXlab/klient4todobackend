@@ -5,6 +5,8 @@ plugins {
     id("kotlin")
 }
 
+apply(plugin = "org.jmailen.kotlinter")
+
 val vJackson = "2.10.2"
 val vJunit5 = "5.6.0"
 val vRetrofit = "2.7.1"

@@ -20,6 +20,4 @@ class ServerListApi(
                     tags = it.value.tags
                 )
             }
-
-
 }
