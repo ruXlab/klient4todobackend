@@ -1,5 +1,8 @@
 package vc.rux.todoclient.todoclient
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties
+import com.fasterxml.jackson.annotation.JsonInclude
+import com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL
 import com.fasterxml.jackson.annotation.JsonProperty
 
 
@@ -14,6 +17,7 @@ internal data class TodoCreateRequest(
     val order: Long
 )
 
+@JsonIgnoreProperties(ignoreUnknown = true)
 internal data class TodoResponse(
     @JsonProperty("id")
     val id: String,
@@ -28,6 +32,7 @@ internal data class TodoResponse(
     val order: Long
 )
 
+@JsonInclude(NON_NULL)
 internal data class TodoUpdateRequest(
     @JsonProperty("title")
     val title: String? = null,

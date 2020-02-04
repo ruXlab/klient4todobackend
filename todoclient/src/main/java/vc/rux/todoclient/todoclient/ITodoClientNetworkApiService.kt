@@ -13,8 +13,8 @@ internal interface ITodoClientNetworkApiService {
     suspend fun delete(@Path("id") id: String)
 
     @POST("/todos")
-    suspend fun create(newTodo: TodoCreateRequest): TodoResponse
+    suspend fun create(@Body newTodo: TodoCreateRequest): TodoResponse
 
     @PATCH("/todos/{id}")
-    suspend fun update(@Path("id") id: String, updates: TodoUpdateRequest): TodoResponse
+    suspend fun update(@Path("id") id: String, @Body updates: TodoUpdateRequest): TodoResponse
 }
