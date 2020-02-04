@@ -3,27 +3,38 @@ package vc.rux.todoclient.todoclient
 import com.fasterxml.jackson.annotation.JsonProperty
 
 
-data class TodoCreateRequest(
+internal data class TodoCreateRequest(
     @JsonProperty("title")
     val title: String,
+
     @JsonProperty("completed")
     val completed: Boolean,
+
     @JsonProperty("order")
     val order: Long
 )
 
-data class TodoResponse(
+internal data class TodoResponse(
     @JsonProperty("id")
     val id: String,
+
     @JsonProperty("title")
     val title: String,
+
     @JsonProperty("completed")
     val completed: Boolean,
+
     @JsonProperty("order")
     val order: Long
 )
 
-data class TodoUpdateCompleted(
+internal data class TodoUpdateRequest(
+    @JsonProperty("title")
+    val title: String? = null,
+
     @JsonProperty("completed")
-    val completed: Boolean
+    val completed: Boolean? = null,
+
+    @JsonProperty("order")
+    val order: Long? = null
 )
