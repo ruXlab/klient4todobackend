@@ -10,7 +10,7 @@ class ServerListApi(
     private val objMapper by lazy { ObjectMapper(YAMLFactory()) }
 
     override fun listAllTodoServers(): List<TodoServer> =
-        objMapper.readValue(networkApiService.serverList(), jacksonTypeRef<Map<String, InnerTodoServerEntity>>())
+        objMapper.readValue(networkApiService.serverList(), jacksonTypeRef<Map<String, TodoServerResponse>>())
             .map {
                 TodoServer(
                     name = it.key,
