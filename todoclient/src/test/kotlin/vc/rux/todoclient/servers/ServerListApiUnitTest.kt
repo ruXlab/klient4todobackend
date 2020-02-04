@@ -1,11 +1,14 @@
 package vc.rux.todoclient.servers
 
-import io.mockk.every
+import io.mockk.coEvery
+import io.mockk.coVerify
 import io.mockk.impl.annotations.InjectMockKs
 import io.mockk.impl.annotations.MockK
 import io.mockk.junit5.MockKExtension
-import io.mockk.verify
-import org.junit.jupiter.api.Assertions.*
+import kotlinx.coroutines.runBlocking
+import org.junit.Assert.assertArrayEquals
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 
@@ -19,15 +22,15 @@ class ServerListApiUnitTest {
     private lateinit var api: ServerListApi
 
     @Test
-    fun canParseResponse() {
+    fun canParseResponse() = runBlocking {
         // given
-        every { networkApiService.serverList() } returns sampleYaml.byteInputStream()
+        coEvery { networkApiService.serverList() } returns sampleYaml.byteInputStream()
 
         // when
         val servers = api.listAllTodoServers()
 
         // then
-        verify(exactly = 1) { networkApiService.serverList() }
+        coVerify(exactly = 1) { networkApiService.serverList() }
         assertTrue(servers.isNotEmpty())
         assertEquals(2, servers.size)
 

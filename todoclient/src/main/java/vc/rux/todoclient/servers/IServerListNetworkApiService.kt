@@ -5,5 +5,5 @@ import retrofit2.http.GET
 
 interface IServerListNetworkApiService {
     @GET("/TodoBackend/todo-backend-site/master/data/implementations.yaml")
-    fun serverList(): InputStream
+    suspend fun serverList(): InputStream
 }
