@@ -1,13 +1,13 @@
 package vc.rux.todoclient.todoclient
 
-import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
-import com.fasterxml.jackson.module.kotlin.readValue
+import com.squareup.moshi.Moshi
 import java.util.concurrent.TimeUnit
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
 import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.MockWebServer
+import okhttp3.mockwebserver.RecordedRequest
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
@@ -18,7 +18,7 @@ class TodoClientIntegrationTest {
     private lateinit var mockServer: MockWebServer
     private lateinit var client: TodoClient
 
-    private val jackson = jacksonObjectMapper()
+    private val moshi = Moshi.Builder().build().newBuilder().build()
 
     @BeforeEach
     fun setUp() {
@@ -79,8 +79,9 @@ class TodoClientIntegrationTest {
         // then
         val req = mockServer.takeLastRequest()
         assertThat(req.path).isEqualTo("/todos/123")
-        assertThat(jackson.readValue<Map<String, String>>(req.body.readUtf8()))
-            .containsEntry("completed", "true")
+
+        assertThat(req.mapFromJson())
+            .containsEntry("completed", true)
             .doesNotContainKey("order")
             .doesNotContainKey("title")
             .hasSize(1)
@@ -99,7 +100,7 @@ class TodoClientIntegrationTest {
         // then
         val req = mockServer.takeLastRequest()
         assertThat(req.path).isEqualTo("/todos/123")
-        assertThat(jackson.readValue<Map<String, String>>(req.body.readUtf8()))
+        assertThat(req.mapFromJson())
             .containsEntry("title", "boo")
             .doesNotContainKey("order")
             .doesNotContainKey("completed")
@@ -120,11 +121,11 @@ class TodoClientIntegrationTest {
         val req = mockServer.takeLastRequest()
         assertThat(req.method).isEqualToIgnoringCase("PATCH")
         assertThat(req.path).isEqualTo("/todos/123")
-        assertThat(jackson.readValue<Map<String, String>>(req.body.readUtf8()))
-            .containsEntry("title", "boo")
-            .containsEntry("completed", "false")
-            .containsEntry("order", "99")
-            .hasSize(3)
+
+        val reqJson = req.fromJson<TodoUpdateRequest>()
+        assertThat(reqJson.title).isEqualTo("boo")
+        assertThat(reqJson.completed).isFalse()
+        assertThat(reqJson.order).isEqualTo(99)
 
         Unit
     }
@@ -141,10 +142,11 @@ class TodoClientIntegrationTest {
         val req = mockServer.takeLastRequest()
         assertThat(req.path).isEqualTo("/todos")
         assertThat(req.method).isEqualToIgnoringCase("POST")
-        assertThat(jackson.readValue<Map<String, String>>(req.body.readUtf8()))
-            .containsEntry("title", "title")
-            .containsEntry("order", "12345")
-            .containsEntry("completed", "true")
+
+        val reqJson = req.fromJson<TodoCreateRequest>()
+        assertThat(reqJson.completed).isTrue()
+        assertThat(reqJson.order).isEqualTo(12345)
+        assertThat(reqJson.title).isEqualTo("title")
 
         Unit
     }
@@ -153,6 +155,13 @@ class TodoClientIntegrationTest {
     fun shutDown() {
         mockServer.shutdown()
     }
+
+    private inline fun <reified T : Any> RecordedRequest.fromJson(): T =
+        moshi.adapter<T>(T::class.java).fromJson(this.body)!!
+
+    private fun RecordedRequest.mapFromJson(): Map<String, Any> =
+        moshi.adapter<Map<String, Any>>(Map::class.java).fromJson(this.body)!!
+
 
     suspend fun MockWebServer.takeLastRequest(waitTimeSeconds: Long = 10) =
         withContext(Dispatchers.IO) {

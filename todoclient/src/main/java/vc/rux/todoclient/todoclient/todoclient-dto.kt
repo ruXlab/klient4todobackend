@@ -1,44 +1,41 @@
 package vc.rux.todoclient.todoclient
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties
-import com.fasterxml.jackson.annotation.JsonInclude
-import com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL
-import com.fasterxml.jackson.annotation.JsonProperty
+import com.squareup.moshi.Json
 
 internal data class TodoCreateRequest(
-    @JsonProperty("title")
+    @Json(name = "title")
     val title: String,
 
-    @JsonProperty("completed")
+    @Json(name = "completed")
     val completed: Boolean,
 
-    @JsonProperty("order")
+    @Json(name = "order")
     val order: Long
 )
 
-@JsonIgnoreProperties(ignoreUnknown = true)
+//@JsonIgnoreProperties(ignoreUnknown = true)
 internal data class TodoResponse(
-    @JsonProperty("id")
+    @Json(name = "id")
     val id: String,
 
-    @JsonProperty("title")
+    @Json(name = "title")
     val title: String,
 
-    @JsonProperty("completed")
+    @Json(name = "completed")
     val completed: Boolean,
 
-    @JsonProperty("order")
+    @Json(name = "order")
     val order: Long
 )
 
-@JsonInclude(NON_NULL)
+//@JsonInclude(NON_NULL)
 internal data class TodoUpdateRequest(
-    @JsonProperty("title")
+    @Json(name = "title")
     val title: String? = null,
 
-    @JsonProperty("completed")
+    @Json(name = "completed")
     val completed: Boolean? = null,
 
-    @JsonProperty("order")
+    @Json(name = "order")
     val order: Long? = null
 )

@@ -1,10 +1,9 @@
 package vc.rux.todoclient.todoclient
 
-import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import retrofit2.Retrofit
-import retrofit2.converter.jackson.JacksonConverterFactory
+import retrofit2.converter.moshi.MoshiConverterFactory
 
 class TodoClient internal constructor(
     private val apiInterface: ITodoClientNetworkApiService
@@ -40,7 +39,7 @@ class TodoClient internal constructor(
             TodoClient(retrofit.create(ITodoClientNetworkApiService::class.java))
 
         fun create(baseUrl: String) = Retrofit.Builder()
-            .addConverterFactory(JacksonConverterFactory.create(jacksonObjectMapper()))
+            .addConverterFactory(MoshiConverterFactory.create())
             .baseUrl(baseUrl)
             .build()
             .let { create(it) }

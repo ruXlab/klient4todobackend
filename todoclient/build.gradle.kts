@@ -7,7 +7,6 @@ plugins {
 
 apply(plugin = "org.jmailen.kotlinter")
 
-val vJackson = "2.10.2"
 val vJunit5 = "5.6.0"
 val vRetrofit = "2.7.1"
 val vKotlinCoroutines = "1.3.3"
@@ -16,8 +15,7 @@ val vOkHttp = "3.14.6"
 dependencies {
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk7:${KotlinCompilerVersion.VERSION}")
     implementation("com.squareup.retrofit2:retrofit:$vRetrofit")
-    implementation("com.squareup.retrofit2:converter-jackson:$vRetrofit")
-    implementation("com.fasterxml.jackson.module:jackson-module-kotlin:${vJackson}")
+    implementation("com.squareup.retrofit2:converter-moshi:$vRetrofit")
     implementation("org.yaml:snakeyaml:1.25")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:$vKotlinCoroutines")
     implementation("com.squareup.okhttp3:okhttp:$vOkHttp")
