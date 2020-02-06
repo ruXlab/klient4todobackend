@@ -17,8 +17,13 @@ buildscript {
         // in the individual module build.gradle files
     }
 }
+
 plugins {
     id("org.jmailen.kotlinter") version "2.3.0"
+}
+
+kotlinter {
+    ignoreFailures = true
 }
 
 allprojects {
@@ -28,8 +33,6 @@ allprojects {
 
     }
 }
-
-//https://docs.gradle.org/current/userguide/kotlin_dsl.html
 
 tasks.register("clean", Delete::class) {
     delete(rootProject.buildDir)

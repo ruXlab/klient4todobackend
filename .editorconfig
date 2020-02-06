@@ -1,0 +1,2 @@
+[*.{kt, kts, gradle}]
+disabled_rules=no-wildcard-imports,no-consecutive-blank-lines

@@ -2,6 +2,7 @@ package vc.rux.todoclient.todoclient
 
 import retrofit2.http.*
 
+
 internal interface ITodoClientNetworkApiService {
     @GET("/todos")
     suspend fun all(): List<TodoResponse>
