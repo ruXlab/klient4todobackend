@@ -18,7 +18,6 @@ dependencies {
     implementation("com.squareup.retrofit2:retrofit:$vRetrofit")
     implementation("com.squareup.retrofit2:converter-jackson:$vRetrofit")
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin:${vJackson}")
-    implementation("com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:${vJackson}")
     implementation("org.yaml:snakeyaml:1.25")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:$vKotlinCoroutines")
     implementation("com.squareup.okhttp3:okhttp:$vOkHttp")

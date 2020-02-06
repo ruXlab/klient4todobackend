@@ -1,17 +1,16 @@
 package vc.rux.todoclient.servers
 
-import com.fasterxml.jackson.annotation.JsonProperty
+private inline fun <reified T: Any> Map<String, Any>?.getSafe(key: String): T =
+    this?.get(key) as T? ?: throw FormatException()
 
-internal data class TodoServerResponse(
-    @JsonProperty("description")
-    val description: String,
+fun todoServerEntityFactory(name: String, properties: Map<String, Any>?): TodoServer {
+    return TodoServer(
+        name = name,
+        description = properties.getSafe("description"),
+        tags = properties.getSafe("tags"),
+        liveServerUrl = properties.getSafe("live_url"),
+        sourceCodeUrl = properties.getSafe("sourcecode_url")
+    )
+}
 
-    @JsonProperty("sourcecode_url")
-    val sourceCodeUrl: String,
-
-    @JsonProperty("live_url")
-    val liveUrl: String,
-
-    @JsonProperty("tags")
-    val tags: List<String>
-)
+class FormatException: Exception("Can't read property, it neither exist nor conform expected format")
