@@ -13,7 +13,7 @@ internal data class TodoCreateRequest(
     val order: Long
 )
 
-//@JsonIgnoreProperties(ignoreUnknown = true)
+// @JsonIgnoreProperties(ignoreUnknown = true)
 internal data class TodoResponse(
     @Json(name = "id")
     val id: String,
@@ -28,7 +28,7 @@ internal data class TodoResponse(
     val order: Long
 )
 
-//@JsonInclude(NON_NULL)
+// @JsonInclude(NON_NULL)
 internal data class TodoUpdateRequest(
     @Json(name = "title")
     val title: String? = null,

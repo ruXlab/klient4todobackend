@@ -1,6 +1,6 @@
 package vc.rux.todoclient.servers
 
-private inline fun <reified T: Any> Map<String, Any>?.getSafe(key: String): T =
+private inline fun <reified T : Any> Map<String, Any>?.getSafe(key: String): T =
     this?.get(key) as T? ?: throw FormatException()
 
 internal fun todoServerEntityFactory(name: String, properties: Map<String, Any>?): TodoServer {
@@ -13,4 +13,4 @@ internal fun todoServerEntityFactory(name: String, properties: Map<String, Any>?
     )
 }
 
-class FormatException: Exception("Can't read property, it neither exist nor conform expected format")
+class FormatException : Exception("Can't read property, it neither exist nor conform expected format")

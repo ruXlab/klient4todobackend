@@ -1,4 +1,4 @@
-package vc.rux.klinent4todobackend
+package vc.rux.klinent4todobackend.ui
 
 import android.os.Bundle
 import android.view.Menu
@@ -6,6 +6,7 @@ import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.activity_main.*
+import vc.rux.klinent4todobackend.R
 
 class MainActivity : AppCompatActivity() {
 

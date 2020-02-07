@@ -1,8 +1,8 @@
 package vc.rux.klinent4todobackend.datasource
 
 import androidx.lifecycle.MutableLiveData
-import vc.rux.klinent4todobackend.misc.Loadable
 import java.lang.Exception
+import vc.rux.klinent4todobackend.misc.Loadable
 
 fun <R> MutableLiveData<Loadable<R>>.postLoadable(cb: () -> R) {
     try {
