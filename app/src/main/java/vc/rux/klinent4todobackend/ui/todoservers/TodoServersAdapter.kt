@@ -40,9 +40,7 @@ class TodoServersAdapter(
                 val layoutInflater = LayoutInflater.from(parent.context)
                 val binding = TodoServerItemBinding.inflate(layoutInflater, parent, false)
 
-                return TodoServerVH(
-                    binding
-                )
+                return TodoServerVH(binding)
             }
         }
     }
