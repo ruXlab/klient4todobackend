@@ -4,26 +4,36 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+
+        <import type="vc.rux.klinent4todobackend.misc.Loadable"/>
         <variable
             name="vm"
-            type="vc.rux.klinent4todobackend.datasource.TodoServersVM" />
+            type="vc.rux.klinent4todobackend.ui.todoservers.TodoServersVM" />
 
     </data>
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        app:refreshing="@{!(vm.todoServers instanceof Loadable.Success)}"
+        app:onRefreshListener="@{() -> vm.reloadServerList(true)}"
         tools:context=".ui.todoservers.TodoServersFragment">
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/todoServerList"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:listitem="@layout/todo_server_item" />
-    </androidx.constraintlayout.widget.ConstraintLayout>
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/todoServerList"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:listitem="@layout/todo_server_item" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
 </layout>

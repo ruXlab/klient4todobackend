@@ -10,7 +10,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.observe
 import vc.rux.klinent4todobackend.databinding.FragmentTodoServersBinding
-import vc.rux.klinent4todobackend.datasource.TodoServersVM
 import vc.rux.klinent4todobackend.misc.Loadable
 import vc.rux.todoclient.servers.ServerListApi
 
@@ -34,7 +33,6 @@ class TodoServersFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
         layoutBinding = FragmentTodoServersBinding.inflate(inflater, container, false).also {
             it.vm = serversViewModel
         }
@@ -48,23 +46,14 @@ class TodoServersFragment : Fragment() {
         super.onActivityCreated(savedInstanceState)
         layoutBinding.lifecycleOwner = viewLifecycleOwner
 
-        val adapter =
-            TodoServersAdapter(
-                serversViewModel
-            )
+        val adapter = TodoServersAdapter(serversViewModel)
         layoutBinding.todoServerList.adapter = adapter
         serversViewModel.todoServers.observe(this) {
-            println(it)
             if (it is Loadable.Success) adapter.submitList(it.data)
         }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-//        view.findViewById<Button>(R.id.button_first).setOnClickListener {
-            //            val action = FirstFragmentDirections.actionFirstFragmentToSecondFragment("From FirstFragment")
-//            findNavController().navigate(action)
-//        }
     }
 }
