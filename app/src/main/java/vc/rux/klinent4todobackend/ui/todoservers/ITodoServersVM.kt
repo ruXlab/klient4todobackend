@@ -3,12 +3,14 @@ package vc.rux.klinent4todobackend.ui.todoservers
 import androidx.lifecycle.LiveData
 import vc.rux.klinent4todobackend.misc.Event
 import vc.rux.klinent4todobackend.misc.Loadable
+import vc.rux.klinent4todobackend.misc.SnackbarNotification
 import vc.rux.todoclient.servers.TodoServer
 
 interface ITodoServersVM {
     val filters: LiveData<Set<String>>
     val todoServers: LiveData<Loadable<List<TodoServer>>>
     val serverSelectedEvent: LiveData<Event<TodoServer>>
+    val snackbarMessage: LiveData<Event<SnackbarNotification?>>
 
     fun addFilter(tag: String)
     fun removeFilter(tag: String)

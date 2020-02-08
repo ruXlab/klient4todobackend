@@ -19,11 +19,13 @@ fun <R> MutableLiveData<Loadable<R>>.postLoadable(cb: () -> R) {
  *           /      \
  *   Success<R>    Error
  */
-suspend fun <R> MutableLiveData<Loadable<R>>.startLoadable(cb: suspend () -> R) {
+suspend fun <R> MutableLiveData<Loadable<R>>.startLoadable(cb: suspend () -> R): Loadable<R> {
     postValue(Loadable.Loading)
-    try {
-        postValue(Loadable.Success(cb()))
+    val result = try {
+        Loadable.Success(cb())
     } catch (ex: Exception) {
-        postValue(Loadable.Error(ex))
+        Loadable.Error(ex)
     }
+    postValue(result)
+    return result
 }

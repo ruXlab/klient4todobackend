@@ -7,9 +7,11 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.observe
+import com.google.android.material.snackbar.Snackbar
 import vc.rux.klinent4todobackend.R
 import vc.rux.klinent4todobackend.databinding.FragmentTodoServersBinding
 import vc.rux.klinent4todobackend.misc.Loadable
+import vc.rux.klinent4todobackend.ui.ext.createSnackbar
 import vc.rux.todoclient.servers.ServerListApi
 
 /**
@@ -62,6 +64,13 @@ class TodoServersFragment : Fragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         layoutBinding.lifecycleOwner = viewLifecycleOwner
+
+        serversViewModel.snackbarMessage.observe(this) { event ->
+            println("event $event")
+            event.getContentIfNotHandled()?.let { snackbarNotification ->
+                view?.createSnackbar(snackbarNotification)?.show()
+            }
+        }
 
         val adapter = TodoServersAdapter(serversViewModel)
         layoutBinding.todoServerList.adapter = adapter

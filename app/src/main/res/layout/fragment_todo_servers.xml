@@ -15,7 +15,7 @@
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:refreshing="@{!(vm.todoServers instanceof Loadable.Success)}"
+        app:refreshing="@{!(vm.todoServers instanceof Loadable.Success || vm.todoServers instanceof Loadable.Error)}"
         app:onRefreshListener="@{() -> vm.reloadServerList(true)}"
         tools:context=".ui.todoservers.TodoServersFragment">
 
