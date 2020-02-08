@@ -16,25 +16,20 @@ import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
-import vc.rux.klinent4todobackend.InstantExecutorExtension
-import vc.rux.klinent4todobackend.R
-import vc.rux.klinent4todobackend.getOrAwaitForCondition
-import vc.rux.klinent4todobackend.getOrAwaitValue
+import vc.rux.klinent4todobackend.*
 import vc.rux.klinent4todobackend.misc.Loadable
 import vc.rux.klinent4todobackend.misc.SnackbarNotification
 import vc.rux.todoclient.servers.IServerListApi
 import vc.rux.todoclient.servers.TodoServer
 
 @ExperimentalCoroutinesApi
-@ExtendWith(value = [MockKExtension::class, InstantExecutorExtension::class])
+@ExtendWith(value = [MockKExtension::class, InstantExecutorExtension::class, SurrogateMainCoroutineExtension::class])
 internal class TodoServersVMTest {
     @MockK
     private lateinit var api: IServerListApi
 
     @InjectMockKs
     private lateinit var vm: TodoServersVM
-
-    private val mainThreadSurrogate = newSingleThreadContext("UI thread")
 
     private val todoRecord = TodoServer(
         "Totoro",
@@ -43,17 +38,6 @@ internal class TodoServersVMTest {
         "totorohuburu",
         listOf("totoro")
     )
-
-    @BeforeEach
-    fun beforeEach() {
-        Dispatchers.setMain(mainThreadSurrogate)
-    }
-
-    @AfterEach
-    fun afterEach() {
-        Dispatchers.resetMain()
-        mainThreadSurrogate.close()
-    }
 
     @Test
     fun initialStateForTheTodoServerListIsLoading() {
