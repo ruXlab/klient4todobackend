@@ -11,6 +11,7 @@ interface ITodoServersVM {
     val todoServers: LiveData<Loadable<List<TodoServer>>>
     val serverSelectedEvent: LiveData<Event<TodoServer>>
     val snackbarMessage: LiveData<Event<SnackbarNotification?>>
+    val noDataSplash: LiveData<Int?>
 
     fun addFilter(tag: String)
     fun removeFilter(tag: String)

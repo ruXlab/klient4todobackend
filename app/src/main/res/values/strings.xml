@@ -11,4 +11,6 @@
     <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
     <string name="menu_refresh">Reload</string>
     <string name="error_loading_list" >Could not load list of todo servers due to %1$s. Please check your internet connection and try again</string>
+    <string name="msg_no_data_is_due_to_error_need_refresh">No data is available due to error\nPlease pull down to refresh</string>
+    <string name="msg_no_data_is_loading">Refreshing data..</string>
 </resources>

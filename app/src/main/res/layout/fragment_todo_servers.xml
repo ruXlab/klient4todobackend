@@ -5,7 +5,13 @@
 
     <data>
 
-        <import type="vc.rux.klinent4todobackend.misc.Loadable"/>
+        <import type="vc.rux.klinent4todobackend.misc.Loadable" />
+
+        <import type="android.view.View" />
+
+        <import type="java.util.List" />
+
+
         <variable
             name="vm"
             type="vc.rux.klinent4todobackend.ui.todoservers.TodoServersVM" />
@@ -15,8 +21,8 @@
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:refreshing="@{!(vm.todoServers instanceof Loadable.Success || vm.todoServers instanceof Loadable.Error)}"
         app:onRefreshListener="@{() -> vm.reloadServerList(true)}"
+        app:refreshing="@{!(vm.todoServers instanceof Loadable.Success || vm.todoServers instanceof Loadable.Error)}"
         tools:context=".ui.todoservers.TodoServersFragment">
 
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -27,12 +33,36 @@
                 android:id="@+id/todoServerList"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
+                android:visibility="@{vm.todoServers instanceof Loadable.Success ? View.VISIBLE : View.GONE}"
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                tools:listitem="@layout/todo_server_item" />
+                tools:listitem="@layout/todo_server_item"
+                tools:visibility="visible" />
+
+            <FrameLayout
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:foregroundGravity="center"
+                android:visibility="@{(vm.todoServers instanceof Loadable.Error) ? View.VISIBLE : View.GONE}"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:visibility="visible">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:text='@{(vm.noDataSplash != null) ? context.getString(vm.noDataSplash) : ""}'
+                    android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                    tools:text="Loading data.." />
+
+            </FrameLayout>
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
