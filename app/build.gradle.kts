@@ -42,12 +42,14 @@ android {
 }
 
 val vArchLivecycle = "2.2.0"
+val vJunit5 = "5.6.0"
+val coroutinesVersion = "1.2.1"
 
 dependencies {
     implementation(project(":todoclient"))
     implementation("androidx.lifecycle:lifecycle-livedata-ktx:$vArchLivecycle")
     implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:$vArchLivecycle")
-    implementation("androidx.fragment:fragment-ktx:1.1.0-rc01")
+    implementation("androidx.fragment:fragment-ktx:1.2.1")
 
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk7:${KotlinCompilerVersion.VERSION}")
     implementation("androidx.appcompat:appcompat:1.1.0")
@@ -55,7 +57,15 @@ dependencies {
     implementation("com.google.android.material:material:1.0.0")
     implementation("androidx.constraintlayout:constraintlayout:1.1.3")
 
-    testImplementation("junit:junit:4.12")
+    testImplementation("io.mockk:mockk:1.9.3")
+    testImplementation("org.assertj:assertj-core:3.13.2")
+    testImplementation("org.junit.jupiter:junit-jupiter-api:$vJunit5")
+    testImplementation("org.junit.vintage:junit-vintage-engine:$vJunit5")
+    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:$vJunit5")
+    testImplementation("androidx.arch.core:core-testing:2.1.0")
+    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutinesVersion")
+    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:$coroutinesVersion")
+
     androidTestImplementation("androidx.test.ext:junit:1.1.1")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.2.0")
 }

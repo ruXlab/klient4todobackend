@@ -65,7 +65,6 @@ class TodoServersFragment : Fragment() {
         layoutBinding.lifecycleOwner = viewLifecycleOwner
 
         serversViewModel.snackbarMessage.observe(this) { event ->
-            println("event $event")
             event.getContentIfNotHandled()?.let { snackbarNotification ->
                 view?.createSnackbar(snackbarNotification)?.show()
             }
