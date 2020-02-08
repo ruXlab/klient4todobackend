@@ -1,14 +1,13 @@
 package vc.rux.klinent4todobackend.ui.todoservers
 
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.observe
+import vc.rux.klinent4todobackend.R
 import vc.rux.klinent4todobackend.databinding.FragmentTodoServersBinding
 import vc.rux.klinent4todobackend.misc.Loadable
 import vc.rux.todoclient.servers.ServerListApi
@@ -26,6 +25,24 @@ class TodoServersFragment : Fragment() {
                 return TodoServersVM(srvApi) as T
             }
         }
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setHasOptionsMenu(true)
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        super.onCreateOptionsMenu(menu, inflater)
+        inflater.inflate(R.menu.todoservers, menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean = when (item.itemId) {
+        R.id.menu_refresh -> {
+            serversViewModel.reloadServerList(true)
+            true
+        }
+        else -> super.onOptionsItemSelected(item)
     }
 
     override fun onCreateView(
