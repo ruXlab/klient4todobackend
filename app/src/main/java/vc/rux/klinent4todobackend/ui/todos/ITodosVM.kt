@@ -7,6 +7,7 @@ import vc.rux.todoclient.todoclient.Todo
 
 interface ITodosVM: IHasSnackbarNotifications {
     val todos: LiveData<Loadable<List<Todo>>>
+    val splashMessage: LiveData<Int?>
 
     fun reload(isForced: Boolean)
 }
