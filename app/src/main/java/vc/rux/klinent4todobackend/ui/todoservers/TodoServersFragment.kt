@@ -7,20 +7,25 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.observe
+import dagger.android.AndroidInjection
+import dagger.android.support.DaggerFragment
 import vc.rux.klinent4todobackend.R
 import vc.rux.klinent4todobackend.databinding.FragmentTodoServersBinding
 import vc.rux.klinent4todobackend.misc.Loadable
 import vc.rux.klinent4todobackend.ui.ext.createSnackbar
 import vc.rux.todoclient.servers.ServerListApi
+import javax.inject.Inject
 
 /**
  * A simple [Fragment] subclass as the default destination in the navigation.
  */
-class TodoServersFragment : Fragment() {
-
+class TodoServersFragment : DaggerFragment() {
     lateinit var layoutBinding: FragmentTodoServersBinding
+
+    @Inject
+    lateinit var srvApi: ServerListApi
+
     private val serversViewModel by viewModels<TodoServersVM> {
-        val srvApi = ServerListApi.create("https://raw.githubusercontent.com/")
         object : ViewModelProvider.Factory {
             @Suppress("UNCHECKED_CAST")
             override fun <T : ViewModel?> create(modelClass: Class<T>): T {
