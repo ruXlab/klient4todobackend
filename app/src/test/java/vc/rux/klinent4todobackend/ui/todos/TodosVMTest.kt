@@ -1,6 +1,7 @@
 package vc.rux.klinent4todobackend.ui.todos
 
 import io.mockk.coEvery
+import io.mockk.coVerify
 import io.mockk.impl.annotations.InjectMockKs
 import io.mockk.impl.annotations.MockK
 import io.mockk.junit5.MockKExtension
@@ -86,6 +87,36 @@ class TodosVMTest {
             .extracting<SnackbarNotification> { it.peekContent() }
             .hasFieldOrPropertyWithValue(SnackbarNotification::stringResId.name, R.string.error_loading_todos)
     }
+
+    @Test
+    fun checkCheckbox() {
+        // given
+        val todo = makeTodo("boo", completed = false)
+        val newTodo = todo.copy(completed = true)
+        val todosStates = mutableListOf<Loadable<List<Todo>>>()
+        coEvery { todoClient.update(todo.id, completed = true) } returns newTodo
+        coEvery { todoClient.all() } returns listOf(todo) andThen listOf(newTodo)
+        vm.todos.observeForever {
+            todosStates += it
+        }
+
+        // when
+        vm.reload(true)
+        vm.check(todo.id, true)
+
+        // then
+        assertThat(vm.todos.getOrAwaitForCondition { it is Loadable.Success })
+            .isInstanceOf(Loadable.Success::class.java)
+        coVerify(exactly = 1) { todoClient.update(todo.id, completed = true) }
+        coVerify(exactly = 2) { todoClient.all() }
+        assertThat(todosStates.first { it is Loadable.Success<List<Todo>> })
+            .extracting<Todo> { (it as Loadable.Success<List<Todo>>).data.first() }
+            .hasFieldOrPropertyWithValue(Todo::completed.name, false)
+        assertThat(todosStates.last { it is Loadable.Success<List<Todo>> })
+            .extracting<Todo> { (it as Loadable.Success<List<Todo>>).data.first() }
+            .hasFieldOrPropertyWithValue(Todo::completed.name, true)
+    }
+
 
     private fun makeTodo(
         title: String = "Title ${UUID.randomUUID()}",

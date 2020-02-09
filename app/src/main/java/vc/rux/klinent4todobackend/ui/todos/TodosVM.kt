@@ -1,7 +1,9 @@
 package vc.rux.klinent4todobackend.ui.todos
 
 import androidx.lifecycle.*
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import vc.rux.klinent4todobackend.R
 import vc.rux.klinent4todobackend.datasource.startLoadable
 import vc.rux.klinent4todobackend.misc.Event
@@ -9,6 +11,7 @@ import vc.rux.klinent4todobackend.misc.Loadable
 import vc.rux.klinent4todobackend.misc.SnackbarNotification
 import vc.rux.todoclient.todoclient.ITodoClient
 import vc.rux.todoclient.todoclient.Todo
+import java.lang.Exception
 
 class TodosVM(private val todoClient: ITodoClient) : ITodosVM, ViewModel() {
     private val _snackbarMessage = MutableLiveData<Event<SnackbarNotification?>>(null)
@@ -36,6 +39,26 @@ class TodosVM(private val todoClient: ITodoClient) : ITodosVM, ViewModel() {
             }
 
             Unit
+        }
+    }
+
+    fun check(todoId: String, isChecked: Boolean) {
+        viewModelScope.launch(Dispatchers.Default) {
+            try {
+                val updatedTodo = todoClient.update(todoId, completed = isChecked)
+                (todos.value as? Loadable.Success<List<Todo>?>)?.data?.let { oldList ->
+                    _todos.postValue(Loadable.Success(oldList.map {
+                        if (it.id == updatedTodo.id) updatedTodo else it
+                    }))
+                }
+                reload(true)
+            } catch (ex: Exception) {
+                val notif = SnackbarNotification(
+                    R.string.error_cant_update_todo,
+                    stringParams = listOf(ex.message.toString())
+                )
+                _snackbarMessage.postValue(Event(notif))
+            }
         }
     }
 

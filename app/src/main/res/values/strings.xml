@@ -15,4 +15,5 @@
     <string name="msg_no_data_is_due_to_error_need_refresh">No data is available due to error\nPlease pull down to refresh</string>
     <string name="msg_no_data_is_loading">Refreshing data..</string>
     <string name="msg_no_todos_yet_create_new">No todos have been created.\nCreate a new one</string>
+    <string name="error_cant_update_todo">Can\'t update todo: %1$s</string>
 </resources>
