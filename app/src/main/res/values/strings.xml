@@ -17,4 +17,5 @@
     <string name="msg_no_todos_yet_create_new">No todos have been created.\nCreate a new one</string>
     <string name="error_cant_update_todo">Can\'t update todo: %1$s</string>
     <string name="error_cant_delete_todo">Can\'t delete todo: %1$s</string>
+    <string name="error_cant_create_todo">Can\'t create new todo due to %1$1</string>
 </resources>

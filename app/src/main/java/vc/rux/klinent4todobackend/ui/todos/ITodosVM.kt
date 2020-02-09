@@ -10,7 +10,8 @@ interface ITodosVM : IHasSnackbarNotifications {
     val todos: LiveData<Loadable<TodoModels>>
     val splashMessage: LiveData<Int?>
 
-    fun check(todoId: TodoId, isChecked: Boolean)
+    fun check(todoId: TodoId, isCompleted: Boolean)
     fun reload(isForced: Boolean)
     fun delete(id: TodoId)
+    fun create(title: String, isCompleted: Boolean = false, order: Long = 0)
 }

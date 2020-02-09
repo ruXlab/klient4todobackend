@@ -35,7 +35,7 @@ internal class TodoServersVMTest {
 
     @Test
     fun initialStateForTheTodoServerListIsLoading() {
-        assertThat(vm.todoServers.getOrAwaitValue())
+        assertThat(vm.todoServers.getOrAwaitForCondition { it is Loadable.Loading })
             .isInstanceOf(Loadable.Loading::class.java)
         assertThat(vm.filters.getOrAwaitValue())
             .isEmpty()
@@ -57,7 +57,7 @@ internal class TodoServersVMTest {
         // then
         assertThat(vm.noDataSplash.getOrAwaitValue()).isNull()
 
-        val loadable = vm.todoServers.getOrAwaitValue()
+        val loadable = vm.todoServers.getOrAwaitForCondition { it is Loadable.Success }
         assertThat(loadable).isInstanceOf(Loadable.Success::class.java)
         assertThat((loadable as Loadable.Success<List<TodoServer>>).data)
             .containsOnly(todoRecord)

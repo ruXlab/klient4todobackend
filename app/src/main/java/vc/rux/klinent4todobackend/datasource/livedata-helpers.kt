@@ -2,6 +2,8 @@ package vc.rux.klinent4todobackend.datasource
 
 import androidx.lifecycle.MutableLiveData
 import java.lang.Exception
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import vc.rux.klinent4todobackend.misc.Loadable
 
 fun <R> MutableLiveData<Loadable<R>>.postLoadable(cb: () -> R) {
@@ -19,7 +21,7 @@ fun <R> MutableLiveData<Loadable<R>>.postLoadable(cb: () -> R) {
  *           /      \
  *   Success<R>    Error
  */
-suspend fun <R> MutableLiveData<Loadable<R>>.startLoadable(cb: suspend () -> R): Loadable<R> {
+suspend fun <R> MutableLiveData<Loadable<R>>.startLoadable(cb: suspend () -> R): Loadable<R> = withContext(Dispatchers.Main) {
     postValue(Loadable.Loading)
     val result = try {
         Loadable.Success(cb())
@@ -27,5 +29,5 @@ suspend fun <R> MutableLiveData<Loadable<R>>.startLoadable(cb: suspend () -> R):
         Loadable.Error(ex)
     }
     postValue(result)
-    return result
+    result
 }
