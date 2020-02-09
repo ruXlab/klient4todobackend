@@ -1,4 +1,5 @@
 import org.jetbrains.kotlin.config.KotlinCompilerVersion
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
     id("com.android.application")
@@ -32,14 +33,18 @@ android {
     }
 
     compileOptions {
-        setSourceCompatibility(JavaVersion.VERSION_1_8)
-        setTargetCompatibility(JavaVersion.VERSION_1_8)
+        sourceCompatibility = JavaVersion.VERSION_1_8
+        targetCompatibility = JavaVersion.VERSION_1_8
+
+        kotlinOptions {
+            freeCompilerArgs = listOf("-XXLanguage:+InlineClasses")
+        }
     }
     kotlinOptions {
         jvmTarget = "1.8"
     }
-
 }
+
 
 val vArchLivecycle = "2.2.0"
 val vJunit5 = "5.6.0"

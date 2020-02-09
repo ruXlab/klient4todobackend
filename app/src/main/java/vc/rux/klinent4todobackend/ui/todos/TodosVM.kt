@@ -15,6 +15,8 @@ class TodosVM(private val todoClient: ITodoClient) : ITodosVM, ViewModel() {
     private val _snackbarMessage = MutableLiveData<Event<SnackbarNotification?>>(null)
     private val _todos = MutableLiveData<Loadable<TodoModels>>(Loadable.Loading)
 
+    private val currentTodos: TodoModels? get() = (todos.value as? Loadable.Success<TodoModels?>)?.data
+
     override val todos: LiveData<Loadable<TodoModels>> get() = _todos
     override val snackbarMessage: LiveData<Event<SnackbarNotification?>> get() = _snackbarMessage
     override val splashMessage: LiveData<Int?> = todos.map { loadable ->
@@ -35,20 +37,35 @@ class TodosVM(private val todoClient: ITodoClient) : ITodosVM, ViewModel() {
                 )
                 _snackbarMessage.postValue(Event(notif))
             }
-
-            Unit
         }
     }
 
-    fun check(todoId: String, isChecked: Boolean) {
+    override fun delete(id: TodoId) {
+        viewModelScope.launch(Dispatchers.Default) {
+            val oldState = currentTodos
+            try {
+                if (oldState != null)
+                    _todos.postValue(Loadable.Success(oldState.filterNot { it.id == id }))
+                todoClient.delete(id.value)
+                reload(true)
+            } catch (ex: Exception) {
+                val notif = SnackbarNotification(
+                    R.string.error_cant_delete_todo,
+                    stringParams = listOf(ex.message.toString())
+                )
+                _snackbarMessage.postValue(Event(notif))
+                if (oldState != null) // revert state back
+                    _todos.postValue(Loadable.Success(oldState))
+            }
+        }
+    }
+
+    override fun check(todoId: TodoId, isChecked: Boolean) {
         viewModelScope.launch(Dispatchers.Default) {
             try {
-                val updatedTodo = todoClient.update(todoId, completed = isChecked)
-                (todos.value as? Loadable.Success<TodoModels?>)?.data?.let { oldList ->
-                    _todos.postValue(Loadable.Success(oldList.map {
-                        if (it.id == updatedTodo.id) updatedTodo.toModel(state = TodoModelState.UPDATING) else it
-                    }))
-                }
+                val updatedTodo = todoClient.update(todoId.value, completed = isChecked)
+                    .toModel(state = TodoModelState.UPDATING)
+                replaceSingleTodoAndPostUpdate(updatedTodo)
                 reload(true)
             } catch (ex: Exception) {
                 val notif = SnackbarNotification(
@@ -57,6 +74,14 @@ class TodosVM(private val todoClient: ITodoClient) : ITodosVM, ViewModel() {
                 )
                 _snackbarMessage.postValue(Event(notif))
             }
+        }
+    }
+
+    private fun replaceSingleTodoAndPostUpdate(updatedTodo: TodoModel) {
+        currentTodos?.let { oldList ->
+            _todos.postValue(Loadable.Success(oldList.map {
+                if (it.id == updatedTodo.id) updatedTodo else it
+            }))
         }
     }
 }

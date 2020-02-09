@@ -17,6 +17,8 @@
 package vc.rux.klinent4todobackend
 
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.ObsoleteCoroutinesApi
 import kotlinx.coroutines.newSingleThreadContext
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.setMain
@@ -24,7 +26,8 @@ import org.junit.jupiter.api.extension.AfterEachCallback
 import org.junit.jupiter.api.extension.BeforeEachCallback
 import org.junit.jupiter.api.extension.ExtensionContext
 
-
+@ExperimentalCoroutinesApi
+@ObsoleteCoroutinesApi
 class SurrogateMainCoroutineExtension : BeforeEachCallback, AfterEachCallback {
     private val mainThreadSurrogate = newSingleThreadContext("UI thread")
 

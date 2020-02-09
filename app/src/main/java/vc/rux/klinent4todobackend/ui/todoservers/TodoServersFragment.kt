@@ -22,6 +22,7 @@ class TodoServersFragment : Fragment() {
     private val serversViewModel by viewModels<TodoServersVM> {
         val srvApi = ServerListApi.create("https://raw.githubusercontent.com/")
         object : ViewModelProvider.Factory {
+            @Suppress("UNCHECKED_CAST")
             override fun <T : ViewModel?> create(modelClass: Class<T>): T {
                 return TodoServersVM(srvApi) as T
             }
