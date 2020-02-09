@@ -36,5 +36,4 @@ class SurrogateMainCoroutineExtension : BeforeEachCallback, AfterEachCallback {
         Dispatchers.resetMain()
         mainThreadSurrogate.close()
     }
-
 }

@@ -5,16 +5,20 @@ import io.mockk.coVerify
 import io.mockk.impl.annotations.InjectMockKs
 import io.mockk.impl.annotations.MockK
 import io.mockk.junit5.MockKExtension
+import java.net.UnknownHostException
+import java.util.*
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import vc.rux.klinent4todobackend.*
+import vc.rux.klinent4todobackend.datasource.TodoModel
+import vc.rux.klinent4todobackend.datasource.TodoModelState
+import vc.rux.klinent4todobackend.datasource.TodoModels
+import vc.rux.klinent4todobackend.datasource.toModel
 import vc.rux.klinent4todobackend.misc.Loadable
 import vc.rux.klinent4todobackend.misc.SnackbarNotification
 import vc.rux.todoclient.todoclient.Todo
 import vc.rux.todoclient.todoclient.TodoClient
-import java.net.UnknownHostException
-import java.util.*
 
 @ExtendWith(value = [MockKExtension::class, InstantExecutorExtension::class, SurrogateMainCoroutineExtension::class])
 class TodosVMTest {
@@ -35,7 +39,7 @@ class TodosVMTest {
     }
 
     @Test
-    fun whenEmplyListOfTodoIsLoadedSplashIsShown() {
+    fun whenEmptyListOfTodoIsLoadedSplashIsShown() {
         // given
         coEvery { todoClient.all() } returns emptyList()
 
@@ -44,8 +48,8 @@ class TodosVMTest {
 
         // then
         assertThat(vm.todos.getOrAwaitForCondition { it is Loadable.Success })
-            .extracting<List<Todo>> { (it as Loadable.Success<List<Todo>>).data }
-            .isEqualTo(emptyList<Todo>())
+            .extracting<TodoModels> { (it as Loadable.Success<TodoModels>).data as TodoModels }
+            .isEqualTo(emptyList<TodoModels>())
         assertThat(vm.splashMessage.getOrAwaitValue())
             .isEqualTo(R.string.msg_no_todos_yet_create_new)
     }
@@ -54,6 +58,7 @@ class TodosVMTest {
     fun refreshCausesNetworkCall() {
         // given
         val todo = makeTodo("boo")
+        val todoModel = todo.toModel()
         coEvery { todoClient.all() } returns listOf(todo)
 
         // when
@@ -62,8 +67,8 @@ class TodosVMTest {
         // then
         assertThat(vm.todos.getOrAwaitForCondition { it is Loadable.Success })
             .isInstanceOf(Loadable.Success::class.java)
-            .extracting<List<Todo>> { (it as Loadable.Success).data }
-            .isEqualTo(listOf(todo))
+            .extracting<TodoModels> { (it as Loadable.Success).data }
+            .isEqualTo(listOf(todoModel))
         assertThat(vm.splashMessage.getOrAwaitValue())
             .isNull()
         assertThat(vm.snackbarMessage.getOrAwaitValue())
@@ -93,7 +98,7 @@ class TodosVMTest {
         // given
         val todo = makeTodo("boo", completed = false)
         val newTodo = todo.copy(completed = true)
-        val todosStates = mutableListOf<Loadable<List<Todo>>>()
+        val todosStates = mutableListOf<Loadable<TodoModels>>()
         coEvery { todoClient.update(todo.id, completed = true) } returns newTodo
         coEvery { todoClient.all() } returns listOf(todo) andThen listOf(newTodo)
         vm.todos.observeForever {
@@ -109,12 +114,15 @@ class TodosVMTest {
             .isInstanceOf(Loadable.Success::class.java)
         coVerify(exactly = 1) { todoClient.update(todo.id, completed = true) }
         coVerify(exactly = 2) { todoClient.all() }
-        assertThat(todosStates.first { it is Loadable.Success<List<Todo>> })
-            .extracting<Todo> { (it as Loadable.Success<List<Todo>>).data.first() }
-            .hasFieldOrPropertyWithValue(Todo::completed.name, false)
-        assertThat(todosStates.last { it is Loadable.Success<List<Todo>> })
-            .extracting<Todo> { (it as Loadable.Success<List<Todo>>).data.first() }
-            .hasFieldOrPropertyWithValue(Todo::completed.name, true)
+
+        assertThat(todosStates.first { it is Loadable.Success<TodoModels> })
+            .extracting<TodoModel> { (it as Loadable.Success<TodoModels>).data.first() }
+            .hasFieldOrPropertyWithValue(TodoModel::completed.name, false)
+        assertThat(todosStates.last { it is Loadable.Success<TodoModels> })
+            .extracting<TodoModel> { (it as Loadable.Success<TodoModels>).data.first() }
+            .hasFieldOrPropertyWithValue(TodoModel::completed.name, true)
+        assertThat(todosStates.filterIsInstance<Loadable.Success<TodoModels>>().map { it.data.single().state })
+            .containsExactly(TodoModelState.READY, TodoModelState.UPDATING, TodoModelState.READY)
     }
 
 
@@ -124,5 +132,4 @@ class TodosVMTest {
         order: Long = 0,
         id: String = UUID.randomUUID().toString()
     ) = Todo(title, completed, order, id)
-
 }
