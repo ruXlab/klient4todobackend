@@ -2,37 +2,26 @@ package vc.rux.klinent4todobackend.ui.todoservers
 
 import android.os.Bundle
 import android.view.*
-import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.observe
-import dagger.android.AndroidInjection
 import dagger.android.support.DaggerFragment
+import javax.inject.Inject
 import vc.rux.klinent4todobackend.R
 import vc.rux.klinent4todobackend.databinding.FragmentTodoServersBinding
 import vc.rux.klinent4todobackend.misc.Loadable
 import vc.rux.klinent4todobackend.ui.ext.createSnackbar
-import vc.rux.todoclient.servers.ServerListApi
-import javax.inject.Inject
 
 /**
- * A simple [Fragment] subclass as the default destination in the navigation.
+ * List of the "backendtodo" servers
  */
 class TodoServersFragment : DaggerFragment() {
     lateinit var layoutBinding: FragmentTodoServersBinding
 
     @Inject
-    lateinit var srvApi: ServerListApi
+    lateinit var vmFactory: ViewModelProvider.Factory
 
-    private val serversViewModel by viewModels<TodoServersVM> {
-        object : ViewModelProvider.Factory {
-            @Suppress("UNCHECKED_CAST")
-            override fun <T : ViewModel?> create(modelClass: Class<T>): T {
-                return TodoServersVM(srvApi) as T
-            }
-        }
-    }
+    private val serversViewModel by viewModels<TodoServersVM> { vmFactory }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -81,9 +70,5 @@ class TodoServersFragment : DaggerFragment() {
         serversViewModel.todoServers.observe(this) {
             if (it is Loadable.Success) adapter.submitList(it.data)
         }
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
     }
 }

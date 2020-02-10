@@ -2,9 +2,10 @@ package vc.rux.klinent4todobackend.di
 
 import dagger.Module
 import dagger.Provides
-import vc.rux.todoclient.servers.ServerListApi
 import javax.inject.Named
 import javax.inject.Singleton
+import vc.rux.todoclient.servers.IServerListApi
+import vc.rux.todoclient.servers.ServerListApi
 
 @Module
 class RepositoryModule {
@@ -14,7 +15,7 @@ class RepositoryModule {
 
     @Provides
     @Singleton
-    fun todoServerListApi(@Named(KEY_TODO_SERVER_URL) url: String): ServerListApi =
+    fun todoServerListApi(@Named(KEY_TODO_SERVER_URL) url: String): IServerListApi =
         ServerListApi.create(url)
 
 
