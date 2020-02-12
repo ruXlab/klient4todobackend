@@ -5,11 +5,13 @@ import java.lang.Exception
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import org.slf4j.LoggerFactory
 import vc.rux.klinent4todobackend.R
 import vc.rux.klinent4todobackend.datasource.*
 import vc.rux.klinent4todobackend.misc.Event
 import vc.rux.klinent4todobackend.misc.Loadable
 import vc.rux.klinent4todobackend.misc.SnackbarNotification
+import vc.rux.klinent4todobackend.misc.logger
 import vc.rux.todoclient.todoclient.ITodoClient
 
 class TodosVM(
@@ -35,6 +37,8 @@ class TodosVM(
         viewModelScope.launch(dispatcher) {
             val result = _todos.startLoadable { todoClient.all().toModel() }
             if (result is Loadable.Error) {
+                logger.error("Error while reloading list of todos", result.exception)
+
                 val notif = SnackbarNotification(
                     R.string.error_loading_todos,
                     stringParams = listOf(result.exception.localizedMessage)
@@ -53,6 +57,8 @@ class TodosVM(
                 todoClient.delete(id.value)
                 reload(true)
             } catch (ex: Exception) {
+                logger.error("Error while removing todo", ex)
+
                 val notif = SnackbarNotification(
                     R.string.error_cant_delete_todo,
                     stringParams = listOf(ex.message.toString())
@@ -73,6 +79,7 @@ class TodosVM(
                     _todos.postValue(Loadable.Success(oldState + newTodo.toModel(TodoModelState.UPDATING)))
                 reload(true)
             } catch (ex: Exception) {
+                logger.error("Error while creating todo", ex)
                 val notif = SnackbarNotification(
                     R.string.error_cant_create_todo,
                     stringParams = listOf(ex.message.toString())
@@ -92,6 +99,7 @@ class TodosVM(
                 replaceSingleTodoAndPostUpdate(updatedTodo)
                 reload(true)
             } catch (ex: Exception) {
+                logger.error("Error while updating isCompleted flag", ex)
                 val notif = SnackbarNotification(
                     R.string.error_cant_update_todo,
                     stringParams = listOf(ex.message.toString())
@@ -107,5 +115,9 @@ class TodosVM(
                 if (it.id == updatedTodo.id) updatedTodo else it
             }))
         }
+    }
+
+    companion object {
+        private val logger = logger<TodosVM>()
     }
 }

@@ -5,6 +5,7 @@ import kotlinx.coroutines.withContext
 import org.yaml.snakeyaml.Yaml
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
+import vc.rux.todoclient.ensureUrlEndsWithSlash
 
 class ServerListApi(
     private val networkApiService: IServerListNetworkApiService
@@ -22,7 +23,7 @@ class ServerListApi(
 
         fun create(baseUrl: String) = Retrofit.Builder()
             .addConverterFactory(MoshiConverterFactory.create())
-            .baseUrl(baseUrl)
+            .baseUrl(ensureUrlEndsWithSlash(baseUrl))
             .build()
             .let { create(it) }
     }
