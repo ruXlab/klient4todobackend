@@ -5,7 +5,6 @@ import java.lang.Exception
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import org.slf4j.LoggerFactory
 import vc.rux.klinent4todobackend.R
 import vc.rux.klinent4todobackend.datasource.*
 import vc.rux.klinent4todobackend.misc.Event

@@ -10,7 +10,6 @@ import javax.inject.Inject
 import vc.rux.klinent4todobackend.R
 import vc.rux.klinent4todobackend.databinding.FragmentTodoServersBinding
 import vc.rux.klinent4todobackend.misc.Loadable
-import vc.rux.klinent4todobackend.ui.MainActivity
 import vc.rux.klinent4todobackend.ui.common.ICanAddFragment
 import vc.rux.klinent4todobackend.ui.ext.createSnackbar
 import vc.rux.klinent4todobackend.ui.todos.TodosFragment

@@ -1,14 +1,13 @@
 package vc.rux.klinent4todobackend.ui.todoservers
 
-import android.util.MutableDouble
 import androidx.lifecycle.*
 import kotlinx.coroutines.launch
-import org.slf4j.LoggerFactory
 import vc.rux.klinent4todobackend.R
 import vc.rux.klinent4todobackend.datasource.startLoadable
 import vc.rux.klinent4todobackend.misc.Event
 import vc.rux.klinent4todobackend.misc.Loadable
 import vc.rux.klinent4todobackend.misc.SnackbarNotification
+import vc.rux.klinent4todobackend.misc.logger
 import vc.rux.todoclient.servers.IServerListApi
 import vc.rux.todoclient.servers.TodoServer
 
@@ -19,12 +18,13 @@ class TodoServersVM(
     override val todoServers: LiveData<Loadable<List<TodoServer>>> get() = _todoServers
     override val serverSelectedEvent: LiveData<Event<TodoServer>?> get() = _selectedServer
     override val snackbarMessage: LiveData<Event<SnackbarNotification?>> get() = _snackbarMessage
-    override val noDataSplash: LiveData<Int?> get() = _todoServers.map { loadable ->
-        when (loadable) {
-            is Loadable.Error -> R.string.msg_no_data_is_due_to_error_need_refresh
-            else -> null
+    override val noDataSplash: LiveData<Int?>
+        get() = _todoServers.map { loadable ->
+            when (loadable) {
+                is Loadable.Error -> R.string.msg_no_data_is_due_to_error_need_refresh
+                else -> null
+            }
         }
-    }
 
 
     private val _todoServers = MutableLiveData<Loadable<List<TodoServer>>>(Loadable.Loading)
@@ -64,6 +64,6 @@ class TodoServersVM(
     }
 
     companion object {
-        private val logger = LoggerFactory.getLogger(TodoServersVM::class.java)
+        private val logger = logger<TodoServersVM>()
     }
 }

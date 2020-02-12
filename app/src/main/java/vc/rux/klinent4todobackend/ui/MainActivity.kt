@@ -9,7 +9,6 @@ import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.activity_main.*
 import vc.rux.klinent4todobackend.R
 import vc.rux.klinent4todobackend.ui.common.ICanAddFragment
-import vc.rux.klinent4todobackend.ui.todos.TodosFragment
 import vc.rux.klinent4todobackend.ui.todoservers.TodoServersFragment
 
 class MainActivity : AppCompatActivity(), ICanAddFragment {
