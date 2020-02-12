@@ -1,10 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
-
         <import type="vc.rux.klinent4todobackend.datasource.TodoModelState" />
 
         <import type="android.view.View" />
@@ -29,11 +27,11 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
+            android:layout_marginStart="@dimen/dp16"
             android:layout_toEndOf="@id/checkBox"
             android:gravity="center_vertical"
             android:minHeight="@dimen/dp48"
             android:text="@{todo.title}"
-            android:layout_marginStart="@dimen/dp16"
             android:textAppearance="@style/TextAppearance.AppCompat.Body1"
             tools:text="Buy a milk" />
 
@@ -45,33 +43,27 @@
             android:layout_alignTop="@id/todoItemTitle"
             android:layout_alignBottom="@id/todoItemTitle"
             android:checked="@{todo.completed}"
+            android:clickable="@{todo.state == TodoModelState.READY}"
+            android:enabled="@{todo.state == TodoModelState.READY}"
             android:gravity="center"
             android:minHeight="@dimen/dp48"
-            android:enabled="@{todo.state == TodoModelState.READY}"
-            android:clickable="@{todo.state == TodoModelState.READY}"
-            android:onClick="@{() -> todo.state == TodoModelState.READY ? vm.check(todo.id, !todo.completed) : null}"
-            />
+            android:scaleX="1.2"
+            android:scaleY="1.2"
+            android:layout_marginStart="@dimen/dp4"
+
+            android:onClick="@{() -> todo.state == TodoModelState.READY ? vm.check(todo.id, !todo.completed) : null}" />
 
         <ProgressBar
             android:id="@+id/progressBar"
             style="?android:attr/progressBarStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignTop="@id/todoItemTitle"
             android:layout_alignStart="@id/checkBox"
-            android:layout_alignBottom="@id/todoItemTitle"
+            android:layout_alignTop="@id/todoItemTitle"
             android:layout_alignEnd="@id/checkBox"
+            android:layout_alignBottom="@id/todoItemTitle"
+            android:scaleX="1.2"
+            android:scaleY="1.2"
             android:visibility="@{todo.state == TodoModelState.UPDATING ? View.VISIBLE : View.GONE}" />
-        <!--        <ProgressBar-->
-<!--            android:id="@+id/progressBar"-->
-<!--            style="?android:attr/progressBarStyle"-->
-<!--            android:layout_width="wrap_content"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:layout_alignTop="@id/todoItemTitle"-->
-<!--            android:layout_alignBottom="@id/todoItemTitle"-->
-<!--            android:layout_alignParentStart="true"-->
-<!--            android:layout_marginTop="@dimen/dp8"-->
-<!--            android:layout_marginBottom="@dimen/dp8"-->
-<!--            android:visibility="@{todo.state == TodoModelState.UPDATING ? View.VISIBLE : View.GONE}" />-->
     </RelativeLayout>
 </layout>

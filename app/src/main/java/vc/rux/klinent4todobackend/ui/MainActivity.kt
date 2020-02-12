@@ -5,7 +5,6 @@ import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
-import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.activity_main.*
 import vc.rux.klinent4todobackend.R
 import vc.rux.klinent4todobackend.ui.common.ICanAddFragment
@@ -20,11 +19,6 @@ class MainActivity : AppCompatActivity(), ICanAddFragment {
 
         if (savedInstanceState == null) {
             replaceFragment(TodoServersFragment.create())
-        }
-
-        fab.setOnClickListener { view ->
-            Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                    .setAction("Action", null).show()
         }
     }
 

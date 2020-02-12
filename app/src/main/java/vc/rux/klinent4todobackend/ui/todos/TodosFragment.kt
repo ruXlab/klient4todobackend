@@ -6,11 +6,11 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.observe
 import dagger.android.support.DaggerFragment
+import javax.inject.Inject
 import vc.rux.klinent4todobackend.R
 import vc.rux.klinent4todobackend.databinding.FragmentTodosBinding
 import vc.rux.klinent4todobackend.misc.Loadable
 import vc.rux.todoclient.todoclient.ITodoClient
-import javax.inject.Inject
 
 /**
  * A simple [Fragment] subclass as the second destination in the navigation.
