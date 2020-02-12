@@ -4,53 +4,65 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
-        <import type="android.view.View"/>
-        <import type="android.text.TextUtils"/>
+
+        <import type="android.view.View" />
+
+        <import type="android.text.TextUtils" />
+
+        <import type="vc.rux.klinent4todobackend.misc.Loadable" />
+
         <variable
             name="vm"
             type="vc.rux.klinent4todobackend.ui.todos.TodosVM" />
 
     </data>
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:background="?android:attr/windowBackground"
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        app:onRefreshListener="@{() -> vm.reload(true)}"
+        app:refreshing="@{!(vm.todos instanceof Loadable.Success || vm.todos instanceof Loadable.Error)}"
         tools:context=".ui.todos.TodosFragment">
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-            android:visibility="@{vm.splashMessage == null ? View.VISIBLE : View.GONE}"
-            tools:visibility="visible"
-            android:id="@+id/fragmentTodoList"
-            />
-
-        <FrameLayout
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            android:visibility="@{vm.splashMessage == null ? View.GONE : View.VISIBLE}"
-            tools:visibility="visible"
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="?android:attr/windowBackground"
             >
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:text='@{vm.splashMessage != null ? context.getString(vm.splashMessage) : ""}'
-                android:textAppearance="@style/TextAppearance.AppCompat.Large"
-                tools:text="Splash message here">
 
-            </TextView>
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/fragmentTodoList"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:visibility="@{vm.splashMessage == null ? View.VISIBLE : View.GONE}"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:visibility="visible" />
 
-        </FrameLayout>
-    </androidx.constraintlayout.widget.ConstraintLayout>
+            <FrameLayout
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:visibility="@{vm.splashMessage == null ? View.GONE : View.VISIBLE}"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:visibility="visible">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:text='@{vm.splashMessage != null ? context.getString(vm.splashMessage) : ""}'
+                    android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                    tools:text="Splash message here">
+
+                </TextView>
+
+            </FrameLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 </layout>
