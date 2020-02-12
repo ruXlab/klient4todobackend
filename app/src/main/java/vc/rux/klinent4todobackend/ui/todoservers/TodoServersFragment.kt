@@ -10,7 +10,10 @@ import javax.inject.Inject
 import vc.rux.klinent4todobackend.R
 import vc.rux.klinent4todobackend.databinding.FragmentTodoServersBinding
 import vc.rux.klinent4todobackend.misc.Loadable
+import vc.rux.klinent4todobackend.ui.MainActivity
+import vc.rux.klinent4todobackend.ui.common.ICanAddFragment
 import vc.rux.klinent4todobackend.ui.ext.createSnackbar
+import vc.rux.klinent4todobackend.ui.todos.TodosFragment
 
 /**
  * List of the "backendtodo" servers
@@ -48,6 +51,7 @@ class TodoServersFragment : DaggerFragment() {
     ): View? {
         layoutBinding = FragmentTodoServersBinding.inflate(inflater, container, false).also {
             it.vm = serversViewModel
+            it.lifecycleOwner = viewLifecycleOwner
         }
 
         serversViewModel.reloadServerList()
@@ -57,7 +61,6 @@ class TodoServersFragment : DaggerFragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        layoutBinding.lifecycleOwner = viewLifecycleOwner
 
         serversViewModel.snackbarMessage.observe(this) { event ->
             event.getContentIfNotHandled()?.let { snackbarNotification ->
@@ -70,5 +73,18 @@ class TodoServersFragment : DaggerFragment() {
         serversViewModel.todoServers.observe(this) {
             if (it is Loadable.Success) adapter.submitList(it.data)
         }
+
+        serversViewModel.serverSelectedEvent.observe(this) { event ->
+            event?.getContentIfNotHandled()?.let { todoServer ->
+                val todosFragment = TodosFragment.create(todoServer.liveServerUrl)
+                (activity as? ICanAddFragment)?.addFragment(todosFragment)
+                    ?: throw Exception("Somehow fragment is mounted to the wrong activity")
+            }
+        }
+    }
+
+    companion object {
+        fun create() = TodoServersFragment()
+        val FRAGMENT_TAG = TodoServersFragment::class.java.canonicalName
     }
 }

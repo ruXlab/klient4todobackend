@@ -4,16 +4,24 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.Fragment
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.activity_main.*
 import vc.rux.klinent4todobackend.R
+import vc.rux.klinent4todobackend.ui.common.ICanAddFragment
+import vc.rux.klinent4todobackend.ui.todos.TodosFragment
+import vc.rux.klinent4todobackend.ui.todoservers.TodoServersFragment
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), ICanAddFragment {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         setSupportActionBar(toolbar)
+
+        if (savedInstanceState == null) {
+            replaceFragment(TodoServersFragment.create())
+        }
 
         fab.setOnClickListener { view ->
             Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
@@ -35,5 +43,18 @@ class MainActivity : AppCompatActivity() {
             R.id.action_settings -> true
             else -> super.onOptionsItemSelected(item)
         }
+    }
+
+    override fun addFragment(fragment: Fragment, fragmentId: String) {
+        supportFragmentManager.beginTransaction()
+            .replace(R.id.nav_host_fragment, fragment, fragmentId)
+            .addToBackStack(fragmentId)
+            .commit()
+    }
+
+    override fun replaceFragment(fragment: Fragment, fragmentId: String) {
+        supportFragmentManager.beginTransaction()
+            .replace(R.id.nav_host_fragment, fragment, fragmentId)
+            .commit()
     }
 }

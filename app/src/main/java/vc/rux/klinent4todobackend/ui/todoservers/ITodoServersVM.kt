@@ -9,7 +9,7 @@ import vc.rux.todoclient.servers.TodoServer
 interface ITodoServersVM : IHasSnackbarNotifications {
     val filters: LiveData<Set<String>>
     val todoServers: LiveData<Loadable<List<TodoServer>>>
-    val serverSelectedEvent: LiveData<Event<TodoServer>>
+    val serverSelectedEvent: LiveData<Event<TodoServer>?>
     val noDataSplash: LiveData<Int?>
 
     fun addFilter(tag: String)
