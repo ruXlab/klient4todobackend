@@ -25,7 +25,7 @@ class TodoClientIntegrationTest {
         mockServer = MockWebServer().also {
             it.start()
         }
-        client = TodoClient.create(mockServer.url("/").toString())
+        client = TodoClient.create(mockServer.url("/todos").toString())
     }
 
     @Test
@@ -140,7 +140,7 @@ class TodoClientIntegrationTest {
 
         // then
         val req = mockServer.takeLastRequest()
-        assertThat(req.path).isEqualTo("/todos")
+        assertThat(req.path).isEqualTo("/todos/")
         assertThat(req.method).isEqualToIgnoringCase("POST")
 
         val reqJson = req.fromJson<TodoCreateRequest>()

@@ -4,18 +4,18 @@ import retrofit2.http.*
 
 
 internal interface ITodoClientNetworkApiService {
-    @GET("/todos")
+    @GET(".")
     suspend fun all(): List<TodoResponse>
 
-    @GET("/todos/{id}")
+    @GET("{id}")
     suspend fun byId(@Path("id") id: String): TodoResponse
 
-    @DELETE("/todos/{id}")
+    @DELETE("{id}")
     suspend fun delete(@Path("id") id: String)
 
-    @POST("/todos")
+    @POST(".")
     suspend fun create(@Body newTodo: TodoCreateRequest): TodoResponse
 
-    @PATCH("/todos/{id}")
+    @PATCH("{id}")
     suspend fun update(@Path("id") id: String, @Body updates: TodoUpdateRequest): TodoResponse
 }
