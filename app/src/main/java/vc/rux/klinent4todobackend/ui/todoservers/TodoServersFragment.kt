@@ -5,11 +5,11 @@ import android.view.*
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.observe
-import dagger.android.support.DaggerFragment
 import javax.inject.Inject
 import vc.rux.klinent4todobackend.R
 import vc.rux.klinent4todobackend.databinding.FragmentTodoServersBinding
 import vc.rux.klinent4todobackend.misc.Loadable
+import vc.rux.klinent4todobackend.ui.common.BaseFragment
 import vc.rux.klinent4todobackend.ui.common.ICanAddFragment
 import vc.rux.klinent4todobackend.ui.ext.createSnackbar
 import vc.rux.klinent4todobackend.ui.todos.TodosFragment
@@ -17,7 +17,7 @@ import vc.rux.klinent4todobackend.ui.todos.TodosFragment
 /**
  * List of the "backendtodo" servers
  */
-class TodoServersFragment : DaggerFragment() {
+class TodoServersFragment : BaseFragment() {
     lateinit var layoutBinding: FragmentTodoServersBinding
 
     @Inject
@@ -33,6 +33,12 @@ class TodoServersFragment : DaggerFragment() {
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         super.onCreateOptionsMenu(menu, inflater)
         inflater.inflate(R.menu.todoservers, menu)
+    }
+
+
+    override fun onResume() {
+        super.onResume()
+        setToolbarTitles(getString(R.string.title_todoservers))
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean = when (item.itemId) {
@@ -75,7 +81,7 @@ class TodoServersFragment : DaggerFragment() {
 
         serversViewModel.serverSelectedEvent.observe(this) { event ->
             event?.getContentIfNotHandled()?.let { todoServer ->
-                val todosFragment = TodosFragment.create(todoServer.liveServerUrl)
+                val todosFragment = TodosFragment.create(todoServer.name, todoServer.liveServerUrl)
                 (activity as? ICanAddFragment)?.addFragment(todosFragment)
                     ?: throw Exception("Somehow fragment is mounted to the wrong activity")
             }

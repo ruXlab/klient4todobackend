@@ -10,11 +10,15 @@ import vc.rux.klinent4todobackend.TodoApp
 @Singleton
 @Component(modules = [
     AndroidInjectionModule::class, AppModule::class, RepositoryModule::class,
-    FragmentsModule::class, ViewModelFactoryModule::class, ViewModelModule::class
+    FragmentsModule::class, ViewModelFactoryModule::class, ViewModelModule::class,
+    TodosModule::class
 ])
 interface TodoAppComponent : AndroidInjector<TodoApp> {
     @Component.Factory
     interface Factory {
         fun create(@BindsInstance application: TodoApp): TodoAppComponent
     }
+
+    fun todosModule(): TodosComponent.Factory
+
 }
