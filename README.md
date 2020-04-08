@@ -18,11 +18,11 @@ This demo app has numbers of screen implemented:
 
 ### Todo for this project
 
-[x] ~Match titles with fragments content~ 
-[ ] Create Todo
-[x] Update Todo
-[ ] Filtering by checked
-[ ] Grouping by checked
-[x] ~Readme~
-[x] CI Pipeline
-[ ] Favourite servers feature
+* [x] ~Match titles with fragments content~ 
+* [ ] Create Todo
+* [x] ~Update Todo~
+* [ ] Filtering by checked
+* [ ] Grouping by checked
+* [x] ~Readme~
+* [x] ~CI Pipeline~
+* [ ] Favourite servers feature
