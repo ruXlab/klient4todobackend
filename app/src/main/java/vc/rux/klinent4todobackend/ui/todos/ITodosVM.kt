@@ -14,10 +14,13 @@ interface ITodosVM : IHasSnackbarNotifications {
     fun reload(isForced: Boolean)
     fun delete(id: TodoId)
     fun create(title: String, isCompleted: Boolean = false, order: Long = 0)
+    fun updateTodoTitle(todoId: TodoId, newTitle: String)
 
-    // workaround due to invisibility of the mangled method names
+    // workarounds due to invisibility of the mangled method names
     // see https://kotlinlang.org/docs/reference/inline-classes.html#mangling
     fun check(todoStringId: String, isCompleted: Boolean) =
             check(TodoId(todoStringId), isCompleted)
+    fun updateTodoTitle(todoStringId: String, newTitle: String) =
+        updateTodoTitle(TodoId(todoStringId), newTitle)
 }
 

@@ -20,7 +20,7 @@ This demo app has numbers of screen implemented:
 
 [x] ~Match titles with fragments content~ 
 [ ] Create Todo
-[ ] Update Todo
+[x] Update Todo
 [ ] Filtering by checked
 [ ] Grouping by checked
 [x] ~Readme~

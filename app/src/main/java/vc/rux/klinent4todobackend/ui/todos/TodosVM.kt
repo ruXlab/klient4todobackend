@@ -2,9 +2,8 @@ package vc.rux.klinent4todobackend.ui.todos
 
 import androidx.lifecycle.*
 import java.lang.Exception
-import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
+import kotlinx.coroutines.flow.*
 import vc.rux.klinent4todobackend.R
 import vc.rux.klinent4todobackend.datasource.*
 import vc.rux.klinent4todobackend.misc.Event
@@ -13,6 +12,7 @@ import vc.rux.klinent4todobackend.misc.SnackbarNotification
 import vc.rux.klinent4todobackend.misc.logger
 import vc.rux.todoclient.todoclient.ITodoClient
 
+@FlowPreview
 class TodosVM(
     private val todoClient: ITodoClient,
     private val dispatcher: CoroutineDispatcher = Dispatchers.Default
@@ -20,6 +20,7 @@ class TodosVM(
     private val _snackbarMessage = MutableLiveData<Event<SnackbarNotification?>>(null)
     private val _todos = MutableLiveData<Loadable<TodoModels>>(Loadable.Loading)
 
+    private val todoUpdates = MutableLiveData<Pair<TodoId, String>>()
     private val currentTodos: TodoModels? get() = (_todos.value as? Loadable.Success<TodoModels?>)?.data
 
     override val todos: LiveData<Loadable<TodoModels>> get() = _todos
@@ -29,6 +30,18 @@ class TodosVM(
             loadable is Loadable.Error -> R.string.msg_no_data_is_due_to_error_need_refresh
             loadable is Loadable.Success<TodoModels> && loadable.data.isEmpty() -> R.string.msg_no_todos_yet_create_new
             else -> null
+        }
+    }
+
+    init {
+        viewModelScope.launch(dispatcher) {
+            todoUpdates.asFlow()
+                .debounce(200)
+                .collect { (taskId, newTitle) ->
+                    logger.info("Updating $taskId with new title $taskId")
+                    val updatedTodo = todoClient.update(taskId.value, title = newTitle)
+                    logger.info("Updated todo: $updatedTodo")
+                }
         }
     }
 
@@ -44,6 +57,17 @@ class TodosVM(
                 )
                 _snackbarMessage.postValue(Event(notif))
             }
+        }
+    }
+
+    override fun updateTodoTitle(todoId: TodoId, newTitle: String) {
+        todoUpdates.value = todoId to newTitle
+
+        (_todos.value as? Loadable.Success<TodoModels>)?.data?.let { items ->
+            items.firstOrNull { it.id == todoId }?.let {
+                it.title = newTitle
+            }
+            _todos.value = Loadable.Success(items)
         }
     }
 
