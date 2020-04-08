@@ -20,5 +20,4 @@ interface TodoAppComponent : AndroidInjector<TodoApp> {
     }
 
     fun todosModule(): TodosComponent.Factory
-
 }

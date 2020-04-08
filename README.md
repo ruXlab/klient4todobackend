@@ -24,5 +24,5 @@ This demo app has numbers of screen implemented:
 [ ] Filtering by checked
 [ ] Grouping by checked
 [x] ~Readme~
-[ ] CI Pipeline
+[x] CI Pipeline
 [ ] Favourite servers feature
