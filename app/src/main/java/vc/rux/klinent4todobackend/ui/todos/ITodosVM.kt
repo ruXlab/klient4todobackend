@@ -15,7 +15,6 @@ interface ITodosVM : IHasSnackbarNotifications {
     fun check(todoId: TodoId, isCompleted: Boolean)
     fun reload(isForced: Boolean)
     fun delete(id: TodoId)
-    fun create(title: String, isCompleted: Boolean = false, order: Long = 0)
     fun create()
     fun updateTodoTitle(todoId: TodoId, newTitle: String)
     fun todoFocusChanged(todoId: TodoId, isFocused: Boolean)

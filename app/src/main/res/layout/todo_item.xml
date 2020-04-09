@@ -39,6 +39,7 @@
             android:onTextChanged='@{(str, start, end, count) -> vm.updateTodoTitle(todo.id, str.toString())}'
             android:paddingStart="@dimen/dp8"
             android:paddingEnd="@dimen/dp8"
+            android:imeOptions="actionDone"
             android:text="@{todo.title}"
             android:textAppearance="@style/TextAppearance.AppCompat.Body1"
             tools:text="Buy a milk" />

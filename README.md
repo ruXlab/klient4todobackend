@@ -23,7 +23,7 @@ This demo app has numbers of screen implemented:
 * [x] ~Remove Todo~
 * [ ] Connect to selected server
 * [ ] Highlight current row
-* [ ] `Enter` in input should create a new item
+* [x] ~`Enter` in input hides keyboard~
 * [ ] Sorting by order and reversed
 * [ ] Drag-and-drop for reorder
 * [x] ~Update Todo~

@@ -148,27 +148,6 @@ class TodosVM(
         }
     }
 
-    override fun create(title: String, isCompleted: Boolean, order: Long) {
-        viewModelScope.launch(dispatcher) {
-            val oldState = currentTodos
-            try {
-                val newTodo = todoClient.create(title, order, isCompleted)
-                if (oldState != null)
-                    _todos.postValue(Loadable.Success(oldState + newTodo.toModel(TodoModelState.UPDATING)))
-                reload(true)
-            } catch (ex: Exception) {
-                logger.error("Error while creating todo", ex)
-                val notif = SnackbarNotification(
-                    R.string.error_cant_create_todo,
-                    stringParams = listOf(ex.message.toString())
-                )
-                _snackbarMessage.postValue(Event(notif))
-                if (oldState != null)
-                    _todos.postValue(Loadable.Success(oldState))
-            }
-        }
-    }
-
     override fun check(todoId: TodoId, isCompleted: Boolean) {
         viewModelScope.launch(dispatcher) {
             try {
