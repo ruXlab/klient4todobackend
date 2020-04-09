@@ -19,10 +19,12 @@ class TodosVM(
 ) : ITodosVM, ViewModel() {
     private val _snackbarMessage = MutableLiveData<Event<SnackbarNotification?>>(null)
     private val _todos = MutableLiveData<Loadable<TodoModels>>(Loadable.Loading)
+    private val _todoIdUnderFocus = MutableLiveData<TodoId?>(null)
 
     private val todoUpdates = MutableLiveData<Pair<TodoId, String>>()
     private val currentTodos: TodoModels? get() = (_todos.value as? Loadable.Success<TodoModels?>)?.data
 
+    override val taskIdUnderFocus: LiveData<TodoId?> get() = _todoIdUnderFocus
     override val todos: LiveData<Loadable<TodoModels>> get() = _todos
     override val snackbarMessage: LiveData<Event<SnackbarNotification?>> get() = _snackbarMessage
     override val splashMessage: LiveData<Int?> = todos.map { loadable ->
@@ -56,6 +58,30 @@ class TodosVM(
                     stringParams = listOf(result.exception.localizedMessage)
                 )
                 _snackbarMessage.postValue(Event(notif))
+            }
+        }
+    }
+
+    override fun create() {
+        viewModelScope.launch(dispatcher) {
+            val oldState = currentTodos
+            try {
+                val newTodo = todoClient.create("", (oldState?.maxBy { it.order }?.order ?: 0) + 1, false)
+                val todoModel = newTodo.toModel(TodoModelState.UPDATING)
+                viewModelScope.launch(Dispatchers.Main) {
+                    _todos.value = Loadable.Success(oldState.orEmpty() + todoModel)
+                    _todoIdUnderFocus.postValue(todoModel.id)
+                }
+                reload(true)
+            } catch (ex: Exception) {
+                logger.error("Error while creating todo", ex)
+                val notif = SnackbarNotification(
+                    R.string.error_cant_create_todo,
+                    stringParams = listOf(ex.message.toString())
+                )
+                _snackbarMessage.postValue(Event(notif))
+                if (oldState != null)
+                    _todos.postValue(Loadable.Success(oldState))
             }
         }
     }

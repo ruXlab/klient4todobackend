@@ -14,6 +14,7 @@ interface ITodosVM : IHasSnackbarNotifications {
     fun reload(isForced: Boolean)
     fun delete(id: TodoId)
     fun create(title: String, isCompleted: Boolean = false, order: Long = 0)
+    fun create()
     fun updateTodoTitle(todoId: TodoId, newTitle: String)
 
     // workarounds due to invisibility of the mangled method names
@@ -22,5 +23,7 @@ interface ITodosVM : IHasSnackbarNotifications {
             check(TodoId(todoStringId), isCompleted)
     fun updateTodoTitle(todoStringId: String, newTitle: String) =
         updateTodoTitle(TodoId(todoStringId), newTitle)
+
+    val taskIdUnderFocus: LiveData<TodoId?>
 }
 

@@ -3,15 +3,23 @@ package vc.rux.klinent4todobackend.ui.todos
 import android.content.Context
 import android.os.Bundle
 import android.view.*
+import android.view.inputmethod.InputMethodManager
+import android.widget.EditText
+import androidx.core.content.ContextCompat.getSystemService
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.observe
 import javax.inject.Inject
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import vc.rux.klinent4todobackend.R
 import vc.rux.klinent4todobackend.databinding.FragmentTodosBinding
 import vc.rux.klinent4todobackend.misc.Loadable
 import vc.rux.klinent4todobackend.ui.common.BaseFragment
 import vc.rux.todoclient.todoclient.ITodoClient
+
 
 /**
  * A simple [Fragment] subclass as the second destination in the navigation.
@@ -72,12 +80,36 @@ class TodosFragment : BaseFragment() {
             todosAdapter.submitList(it.data)
         }
 
+        viewModel.taskIdUnderFocus.observe(viewLifecycleOwner) { todoId ->
+            if (todoId == null) { // clear focus
+                binding.fragmentTodoList.requestFocus()
+                return@observe
+            }
+            // try to set focus
+            todosAdapter.todoPosition(todoId)
+                ?.let { binding.fragmentTodoList.smoothScrollToPosition(it) }
+
+            lifecycleScope.launch(Dispatchers.Main) {
+                delay(300L)
+                todosAdapter.todoPosition(todoId)
+                    ?.let { binding.fragmentTodoList.getChildAt(it) }
+                    ?.findViewById<EditText>(R.id.todoItemTitle)
+                    ?.focusAndShowKeyboard()
+            }
+        }
+
         return binding.root
     }
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
         setToolbarTitles(paramServerName, paramServerUrl)
+    }
+
+    private fun View.focusAndShowKeyboard() {
+        this.requestFocus()
+        (this.context.getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager)
+            ?.showSoftInput(this, InputMethodManager.SHOW_IMPLICIT)
     }
 
     companion object {

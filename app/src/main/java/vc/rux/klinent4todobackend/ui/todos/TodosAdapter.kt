@@ -6,6 +6,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import vc.rux.klinent4todobackend.databinding.TodoItemBinding
+import vc.rux.klinent4todobackend.datasource.TodoId
 import vc.rux.klinent4todobackend.datasource.TodoModel
 
 class TodosAdapter(
@@ -20,6 +21,13 @@ class TodosAdapter(
 
     override fun onBindViewHolder(holder: TodoVH, position: Int) {
         holder.bind(getItem(position))
+    }
+
+    fun focusTodo(todoId: TodoId?) {
+    }
+
+    fun todoPosition(todoId: TodoId): Int? {
+        return (0 until itemCount).find { getItem(it).id == todoId }
     }
 
     class TodoVH(
