@@ -6,11 +6,13 @@ import android.view.*
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.observe
 import javax.inject.Inject
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import vc.rux.klinent4todobackend.R
@@ -38,7 +40,10 @@ class TodosFragment : BaseFragment() {
         arguments?.getString(PARAM_SERVERURL)!!
     }
 
-    private val viewModel by lazy { TodosVM(todoClient) }
+    @FlowPreview
+    private val viewModel: ITodosVM by viewModels<TodosVM> {
+        TodosVM.TodosViewModelFactory(paramServerUrl)
+    }
 
     //    private val serversViewModel by viewModels<TodoServersVM> { vmFactory }
     override fun onCreate(savedInstanceState: Bundle?) {

@@ -13,7 +13,7 @@
 
         <variable
             name="vm"
-            type="vc.rux.klinent4todobackend.ui.todos.TodosVM" />
+            type="vc.rux.klinent4todobackend.ui.todos.ITodosVM" />
 
     </data>
 
@@ -36,6 +36,7 @@
                 android:layout_marginBottom="24dp"
                 android:clickable="true"
                 android:enabled="@{vm.todos instanceof Loadable.Success}"
+                android:visibility="@{vm.todos instanceof Loadable.Error ? View.GONE : View.VISIBLE}"
                 android:focusable="true"
                 android:scaleType="centerInside"
                 android:onClick="@{() -> vm.create()}"

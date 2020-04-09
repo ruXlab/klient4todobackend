@@ -14,6 +14,7 @@ import vc.rux.klinent4todobackend.misc.Loadable
 import vc.rux.klinent4todobackend.misc.SnackbarNotification
 import vc.rux.klinent4todobackend.misc.logger
 import vc.rux.todoclient.todoclient.ITodoClient
+import vc.rux.todoclient.todoclient.TodoClient
 
 @FlowPreview
 class TodosVM(
@@ -176,5 +177,12 @@ class TodosVM(
 
     companion object {
         private val logger = logger<TodosVM>()
+    }
+
+    class TodosViewModelFactory(private val serverUrl: String) : ViewModelProvider.Factory {
+        @Suppress("UNCHECKED_CAST")
+        override fun <T : ViewModel?> create(modelClass: Class<T>): T {
+            return TodosVM(TodoClient.create(serverUrl)) as T
+        }
     }
 }

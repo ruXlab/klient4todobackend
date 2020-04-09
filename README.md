@@ -21,7 +21,7 @@ This demo app has numbers of screen implemented:
 * [x] ~Match titles with fragments content~ 
 * [x] ~Create Todo~
 * [x] ~Remove Todo~
-* [ ] Connect to selected server
+* [x] ~Connect to selected server~
 * [ ] Highlight current row
 * [x] ~`Enter` in input hides keyboard~
 * [ ] Sorting by order and reversed
@@ -32,3 +32,4 @@ This demo app has numbers of screen implemented:
 * [x] ~Readme~
 * [x] ~CI Pipeline~
 * [ ] Favourite servers feature
+* [x] _bug_ sometimes just created items removed immediately 

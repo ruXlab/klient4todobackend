@@ -12,7 +12,7 @@
     <string name="menu_refresh">Reload</string>
     <string name="error_loading_server_list">Could not load list of todo servers due to %1$s. Please check your internet connection and try again</string>
     <string name="error_loading_todos">Can\'t load todos: %1$s</string>
-    <string name="msg_no_data_is_due_to_error_need_refresh">No data is available due to error\nPlease pull down to refresh</string>
+    <string name="msg_no_data_is_due_to_error_need_refresh">No data is available due to error\nPlease pull down to refresh\n\nNote that some servers need time to startup as they\'re hosted on the free platforms. Also, although there are many servers listed on project page some of them return errors or not fully conform with TodoBackend spec</string>
     <string name="msg_no_data_is_loading">Refreshing data..</string>
     <string name="msg_no_todos_yet_create_new">No todos have been created.\nCreate a new one</string>
     <string name="error_cant_update_todo">Can\'t update todo: %1$s</string>
