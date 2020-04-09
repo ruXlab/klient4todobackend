@@ -19,7 +19,10 @@ This demo app has numbers of screen implemented:
 ### Todo for this project
 
 * [x] ~Match titles with fragments content~ 
-* [ ] Create Todo
+* [x] ~Create Todo~
+* [ ] Remove Todo
+* [ ] Sorting by order and reversed
+* [ ] Drag-and-drop for reorder
 * [x] ~Update Todo~
 * [ ] Filtering by checked
 * [ ] Grouping by checked

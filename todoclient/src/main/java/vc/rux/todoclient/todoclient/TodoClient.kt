@@ -16,6 +16,7 @@ class TodoClient internal constructor(
 
     override suspend fun delete(id: String) = withContext(Dispatchers.IO) {
         apiInterface.delete(id)
+        Unit
     }
 
     override suspend fun update(

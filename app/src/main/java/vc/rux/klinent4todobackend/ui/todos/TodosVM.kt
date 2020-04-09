@@ -97,6 +97,17 @@ class TodosVM(
         }
     }
 
+    override fun todoFocusChanged(todoId: TodoId, isFocused: Boolean) {
+        if (isFocused) return
+        val todo = currentTodos?.firstOrNull { it.id == todoId }
+            ?: return
+
+        if (todo.title.isEmpty()) {
+            logger.info("todoFocusChanged: todoId#${todo.id} had an empty title - removing it..")
+            delete(todoId)
+        }
+    }
+
     override fun delete(id: TodoId) {
         viewModelScope.launch(dispatcher) {
             val oldState = currentTodos

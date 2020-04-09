@@ -1,5 +1,6 @@
 package vc.rux.todoclient.todoclient
 
+import retrofit2.Response
 import retrofit2.http.*
 
 
@@ -11,7 +12,7 @@ internal interface ITodoClientNetworkApiService {
     suspend fun byId(@Path("id") id: String): TodoResponse
 
     @DELETE("{id}")
-    suspend fun delete(@Path("id") id: String)
+    suspend fun delete(@Path("id") id: String): Response<Unit>
 
     @POST(".")
     suspend fun create(@Body newTodo: TodoCreateRequest): TodoResponse

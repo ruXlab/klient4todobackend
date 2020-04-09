@@ -35,7 +35,7 @@
             android:layout_toEndOf="@id/checkBox"
             android:gravity="center_vertical"
             android:minHeight="@dimen/dp48"
-            android:onFocusChangeListener='@{(v, hasFocus) -> System.out.println("%" + todo + " " + hasFocus)}'
+            android:onFocusChangeListener='@{(v, hasFocus) -> vm.todoFocusChanged(todo.id, hasFocus)}'
             android:onTextChanged='@{(str, start, end, count) -> vm.updateTodoTitle(todo.id, str.toString())}'
             android:text="@{todo.title}"
             android:textAppearance="@style/TextAppearance.AppCompat.Body1"
