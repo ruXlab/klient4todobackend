@@ -19,4 +19,6 @@
     <string name="error_cant_delete_todo">Can\'t delete todo: %1$s</string>
     <string name="error_cant_create_todo">Can\'t create new todo due to %1$1</string>
     <string name="title_todoservers">TodoServers Implementations </string>
+    <string name="hint_start_typing">Start typing..</string>
+    <string name="hint_delete_todo">Delete Todo</string>
 </resources>

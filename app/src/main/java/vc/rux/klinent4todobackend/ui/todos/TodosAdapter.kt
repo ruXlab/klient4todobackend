@@ -2,6 +2,7 @@ package vc.rux.klinent4todobackend.ui.todos
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.lifecycle.LifecycleOwner
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -10,23 +11,24 @@ import vc.rux.klinent4todobackend.datasource.TodoId
 import vc.rux.klinent4todobackend.datasource.TodoModel
 
 class TodosAdapter(
-    private val viewModel: ITodosVM
+    private val viewModel: ITodosVM,
+    private val lifecycleOwner: LifecycleOwner
 ) : ListAdapter<TodoModel, TodosAdapter.TodoVH>(TodoDiffCallback()) {
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int
-    ): TodoVH =
-        TodoVH(TodoItemBinding.inflate(LayoutInflater.from(parent.context)), viewModel)
+    ): TodoVH {
+        val binding = TodoItemBinding.inflate(LayoutInflater.from(parent.context)).also {
+            it.lifecycleOwner = lifecycleOwner
+        }
+        return TodoVH(binding, viewModel)
+    }
 
 
-    override fun onBindViewHolder(holder: TodoVH, position: Int) {
+    override fun onBindViewHolder(holder: TodoVH, position: Int) =
         holder.bind(getItem(position))
-    }
 
-    fun focusTodo(todoId: TodoId?) {
-    }
-
-    fun todoPosition(todoId: TodoId): Int? {
+    fun getTodoPosition(todoId: TodoId): Int? {
         return (0 until itemCount).find { getItem(it).id == todoId }
     }
 

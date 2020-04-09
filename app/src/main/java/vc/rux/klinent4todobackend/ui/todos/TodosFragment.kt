@@ -5,7 +5,6 @@ import android.os.Bundle
 import android.view.*
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
-import androidx.core.content.ContextCompat.getSystemService
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
@@ -65,14 +64,13 @@ class TodosFragment : BaseFragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-
         viewModel.reload(false)
         val binding = FragmentTodosBinding.inflate(inflater, container, false).also {
             it.vm = viewModel
             it.lifecycleOwner = viewLifecycleOwner
         }
 
-        val todosAdapter = TodosAdapter(viewModel)
+        val todosAdapter = TodosAdapter(viewModel, viewLifecycleOwner)
         binding.fragmentTodoList.adapter = todosAdapter
 
         viewModel.todos.observe(viewLifecycleOwner) {
@@ -80,18 +78,19 @@ class TodosFragment : BaseFragment() {
             todosAdapter.submitList(it.data)
         }
 
-        viewModel.taskIdUnderFocus.observe(viewLifecycleOwner) { todoId ->
+        viewModel.placeFocusOnTaskId.observe(viewLifecycleOwner) { todoId ->
             if (todoId == null) { // clear focus
                 binding.fragmentTodoList.requestFocus()
                 return@observe
             }
+
             // try to set focus
-            todosAdapter.todoPosition(todoId)
+            todosAdapter.getTodoPosition(todoId)
                 ?.let { binding.fragmentTodoList.smoothScrollToPosition(it) }
 
             lifecycleScope.launch(Dispatchers.Main) {
                 delay(300L)
-                todosAdapter.todoPosition(todoId)
+                todosAdapter.getTodoPosition(todoId)
                     ?.let { binding.fragmentTodoList.getChildAt(it) }
                     ?.findViewById<EditText>(R.id.todoItemTitle)
                     ?.focusAndShowKeyboard()

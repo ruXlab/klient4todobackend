@@ -9,7 +9,8 @@ import vc.rux.klinent4todobackend.ui.common.IHasSnackbarNotifications
 interface ITodosVM : IHasSnackbarNotifications {
     val todos: LiveData<Loadable<TodoModels>>
     val splashMessage: LiveData<Int?>
-    val taskIdUnderFocus: LiveData<TodoId?>
+    val placeFocusOnTaskId: LiveData<TodoId?>
+    val todoIdUnderFocus: LiveData<TodoId?>
 
     fun check(todoId: TodoId, isCompleted: Boolean)
     fun reload(isForced: Boolean)
@@ -22,10 +23,15 @@ interface ITodosVM : IHasSnackbarNotifications {
     // workarounds due to invisibility of the mangled method names in java world
     // see https://kotlinlang.org/docs/reference/inline-classes.html#mangling
     fun check(todoStringId: String, isCompleted: Boolean) =
-            check(TodoId(todoStringId), isCompleted)
+        check(TodoId(todoStringId), isCompleted)
+
     fun updateTodoTitle(todoStringId: String, newTitle: String) =
         updateTodoTitle(TodoId(todoStringId), newTitle)
+
     fun todoFocusChanged(todoId: String, isFocused: Boolean) =
         todoFocusChanged(TodoId(todoId), isFocused)
+
+    fun delete(id: String) =
+        delete(TodoId(id))
 }
 

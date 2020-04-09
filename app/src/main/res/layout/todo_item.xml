@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
@@ -20,9 +21,7 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:padding="@dimen/dp4"
-        >
-
+        android:padding="@dimen/dp4">
 
         <EditText
             android:id="@+id/todoItemTitle"
@@ -30,13 +29,16 @@
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
             android:layout_marginStart="@dimen/dp8"
-            android:paddingStart="@dimen/dp8"
-            android:paddingEnd="@dimen/dp8"
             android:layout_toEndOf="@id/checkBox"
             android:gravity="center_vertical"
+            android:hint="@string/hint_start_typing"
+            android:importantForAutofill="no"
+            android:inputType="textAutoCorrect|text"
             android:minHeight="@dimen/dp48"
             android:onFocusChangeListener='@{(v, hasFocus) -> vm.todoFocusChanged(todo.id, hasFocus)}'
             android:onTextChanged='@{(str, start, end, count) -> vm.updateTodoTitle(todo.id, str.toString())}'
+            android:paddingStart="@dimen/dp8"
+            android:paddingEnd="@dimen/dp8"
             android:text="@{todo.title}"
             android:textAppearance="@style/TextAppearance.AppCompat.Body1"
             tools:text="Buy a milk" />
@@ -71,5 +73,20 @@
             android:scaleX="1.2"
             android:scaleY="1.2"
             android:visibility="@{todo.state == TodoModelState.UPDATING ? View.VISIBLE : View.GONE}" />
+
+        <ImageButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@+id/todoItemTitle"
+            android:layout_alignBottom="@+id/todoItemTitle"
+            android:layout_alignParentEnd="true"
+            android:alpha="0.5"
+            android:background="@android:color/transparent"
+            android:contentDescription="@string/hint_delete_todo"
+            android:onClick='@{() -> vm.delete(todo.id)}'
+            android:padding="@dimen/dp8"
+            android:tint="#555"
+            android:visibility="@{vm.todoIdUnderFocus.value == todo.id ? View.VISIBLE : View.GONE}"
+            app:srcCompat="@drawable/ic_delete" />
     </RelativeLayout>
 </layout>

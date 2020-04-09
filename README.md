@@ -20,7 +20,10 @@ This demo app has numbers of screen implemented:
 
 * [x] ~Match titles with fragments content~ 
 * [x] ~Create Todo~
-* [ ] Remove Todo
+* [x] ~Remove Todo~
+* [ ] Connect to selected server
+* [ ] Highlight current row
+* [ ] `Enter` in input should create a new item
 * [ ] Sorting by order and reversed
 * [ ] Drag-and-drop for reorder
 * [x] ~Update Todo~

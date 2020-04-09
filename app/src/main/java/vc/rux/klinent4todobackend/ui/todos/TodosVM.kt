@@ -1,9 +1,12 @@
 package vc.rux.klinent4todobackend.ui.todos
 
 import androidx.lifecycle.*
-import java.lang.Exception
-import kotlinx.coroutines.*
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.FlowPreview
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.debounce
+import kotlinx.coroutines.launch
 import vc.rux.klinent4todobackend.R
 import vc.rux.klinent4todobackend.datasource.*
 import vc.rux.klinent4todobackend.misc.Event
@@ -18,15 +21,20 @@ class TodosVM(
     private val dispatcher: CoroutineDispatcher = Dispatchers.Default
 ) : ITodosVM, ViewModel() {
     private val _snackbarMessage = MutableLiveData<Event<SnackbarNotification?>>(null)
+    override val snackbarMessage: LiveData<Event<SnackbarNotification?>> get() = _snackbarMessage
+
     private val _todos = MutableLiveData<Loadable<TodoModels>>(Loadable.Loading)
+    override val todos: LiveData<Loadable<TodoModels>> get() = _todos
+
+    private val _placeFocusOnTaskId = MutableLiveData<TodoId?>(null)
+    override val placeFocusOnTaskId: LiveData<TodoId?> get() = _placeFocusOnTaskId
+
     private val _todoIdUnderFocus = MutableLiveData<TodoId?>(null)
+    override val todoIdUnderFocus: LiveData<TodoId?> get() = _todoIdUnderFocus
 
     private val todoUpdates = MutableLiveData<Pair<TodoId, String>>()
     private val currentTodos: TodoModels? get() = (_todos.value as? Loadable.Success<TodoModels?>)?.data
 
-    override val taskIdUnderFocus: LiveData<TodoId?> get() = _todoIdUnderFocus
-    override val todos: LiveData<Loadable<TodoModels>> get() = _todos
-    override val snackbarMessage: LiveData<Event<SnackbarNotification?>> get() = _snackbarMessage
     override val splashMessage: LiveData<Int?> = todos.map { loadable ->
         when {
             loadable is Loadable.Error -> R.string.msg_no_data_is_due_to_error_need_refresh
@@ -63,14 +71,22 @@ class TodosVM(
     }
 
     override fun create() {
+        val existingEmptyTodo = currentTodos?.firstOrNull { it.title.isEmpty() }
+        if (existingEmptyTodo != null) {
+            logger.info("create: found todo#${existingEmptyTodo.id} with empty title - no need to create an another todo")
+            _placeFocusOnTaskId.postValue(existingEmptyTodo.id)
+            return
+        }
+
         viewModelScope.launch(dispatcher) {
             val oldState = currentTodos
             try {
-                val newTodo = todoClient.create("", (oldState?.maxBy { it.order }?.order ?: 0) + 1, false)
+                val order = (oldState?.maxBy { it.order }?.order ?: 0) + 1
+                val newTodo = todoClient.create("", order, false)
                 val todoModel = newTodo.toModel(TodoModelState.UPDATING)
                 viewModelScope.launch(Dispatchers.Main) {
                     _todos.value = Loadable.Success(oldState.orEmpty() + todoModel)
-                    _todoIdUnderFocus.postValue(todoModel.id)
+                    _placeFocusOnTaskId.postValue(todoModel.id)
                 }
                 reload(true)
             } catch (ex: Exception) {
@@ -98,6 +114,8 @@ class TodosVM(
     }
 
     override fun todoFocusChanged(todoId: TodoId, isFocused: Boolean) {
+        _todoIdUnderFocus.postValue(todoId.takeIf { isFocused })
+
         if (isFocused) return
         val todo = currentTodos?.firstOrNull { it.id == todoId }
             ?: return
